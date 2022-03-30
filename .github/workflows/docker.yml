@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Validate composer.json and composer.lock
+      - name: Install Composer dependencies
         run: composer install --no-dev -o
 
       - name: Login to registry
@@ -35,5 +35,11 @@ jobs:
       - name: Build PHP-FPM Dev
         run: docker build --force-rm --target development --tag ghcr.io/waltertamboer/php-support-system:php81-fpm-dev --file .docker/php-fpm/Dockerfile .
 
-      - name: Publish docker image
-        run: echo Push
+      - name: Publishing ghcr.io/waltertamboer/php-support-system:nginx
+        run: docker push ghcr.io/waltertamboer/php-support-system:nginx
+
+      - name: Publishing ghcr.io/waltertamboer/php-support-system:php81-fpm
+        run: docker push ghcr.io/waltertamboer/php-support-system:php81-fpm
+
+      - name: Publishing ghcr.io/waltertamboer/php-support-system:php81-fpm-dev
+        run: docker push ghcr.io/waltertamboer/php-support-system:php81-fpm-dev
