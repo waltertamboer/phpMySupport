@@ -35,6 +35,9 @@ jobs:
       - name: Build PHP-FPM Dev
         run: docker build --force-rm --target development --tag ghcr.io/waltertamboer/php-support-system:php81-fpm-dev --file .docker/php-fpm/Dockerfile .
 
+      - name: Build PHP-FPM CI
+        run: docker build --force-rm --target ci --tag ghcr.io/waltertamboer/php-support-system:php81-fpm-ci --file .docker/php-fpm/Dockerfile .
+
       - name: Publishing ghcr.io/waltertamboer/php-support-system:nginx
         run: docker push ghcr.io/waltertamboer/php-support-system:nginx
 
@@ -43,3 +46,6 @@ jobs:
 
       - name: Publishing ghcr.io/waltertamboer/php-support-system:php81-fpm-dev
         run: docker push ghcr.io/waltertamboer/php-support-system:php81-fpm-dev
+
+      - name: Publishing ghcr.io/waltertamboer/php-support-system:php81-fpm-ci
+        run: docker push ghcr.io/waltertamboer/php-support-system:php81-fpm-ci
