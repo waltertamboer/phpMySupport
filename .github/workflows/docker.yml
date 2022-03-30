@@ -1,6 +1,8 @@
 name: Docker
 
 on:
+  push:
+    branches: [ master ]
   workflow_run:
     workflows: [ "Test" ]
     types:
@@ -19,7 +21,7 @@ jobs:
         run: echo $GHCR_TOKEN | docker login ghcr.io -u $GHCR_USERNAME --password-stdin
 
       - name: Build docker image
-        run: echo Build
+        run: echo Build ghcr.io/OWNER/IMAGE_NAME:latest
 
       - name: Publish docker image
         run: echo Push
