@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Validate composer.json and composer.lock
+        run: composer install --no-dev -o
+
       - name: Login to registry
         run: echo $GHCR_TOKEN | docker login ghcr.io -u $GHCR_USERNAME --password-stdin
         env:
