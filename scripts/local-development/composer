@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+docker run \
+  --rm \
+  -it \
+  -v $(pwd):/opt/phpsupport \
+  todo:php81-fpm-ci \
+  composer $@

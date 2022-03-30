@@ -1,0 +1,43 @@
+version: '3'
+
+volumes:
+  database-data:
+    driver: local
+  php-socket:
+    driver: local
+
+services:
+  database-server:
+    image: postgres:14
+    container_name: phpsupport-database-server
+    environment:
+      POSTGRES_DB: "phpsupport"
+      POSTGRES_USER: "phpsupport"
+      POSTGRES_PASSWORD: "phpsupport"
+    volumes:
+      - database-data:/var/lib/postgresql/data
+      - ./:/data/
+
+  php-fpm:
+    image: todo:php81-fpm-dev
+    container_name: phpsupport-php-fpm
+    volumes:
+      - ./:/opt/phpsupport
+      - php-socket:/var/run/php
+    user: "0"
+    working_dir: /opt/phpsupport
+    links:
+      - database-server
+
+  webserver:
+    image: todo:develop-nginx
+    container_name: phpsupport-webserver
+    volumes:
+      - ./:/opt/phpsupport
+      - php-socket:/var/run/php
+    working_dir: /opt/phpsupport
+    links:
+      - database-server
+    environment:
+      - VIRTUAL_HOST=api.phpsupportlegal.com.docker
+      - VIRTUAL_PORT=8080
