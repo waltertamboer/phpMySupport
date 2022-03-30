@@ -39,5 +39,5 @@ services:
     links:
       - database-server
     environment:
-      - VIRTUAL_HOST=api.phpsupportlegal.com.docker
+      - VIRTUAL_HOST=phpsupport-webserver.docker
       - VIRTUAL_PORT=8080
