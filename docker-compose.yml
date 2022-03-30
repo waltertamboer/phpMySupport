@@ -19,7 +19,7 @@ services:
       - ./:/data/
 
   php-fpm:
-    image: todo:php81-fpm-dev
+    image: ghcr.io/waltertamboer/php-support-system:php81-fpm-dev
     container_name: phpsupport-php-fpm
     volumes:
       - ./:/opt/phpsupport
@@ -30,7 +30,7 @@ services:
       - database-server
 
   webserver:
-    image: todo:develop-nginx
+    image: ghcr.io/waltertamboer/php-support-system:nginx
     container_name: phpsupport-webserver
     volumes:
       - ./:/opt/phpsupport
