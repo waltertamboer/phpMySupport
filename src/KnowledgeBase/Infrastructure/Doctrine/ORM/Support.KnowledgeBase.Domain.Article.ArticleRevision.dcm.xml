@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                   https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+    <entity name="Support\KnowledgeBase\Domain\Article\ArticleRevision" table="article_revision">
+        <id name="id" type="uuid"/>
+
+        <field name="createdAt" type="datetime_immutable"/>
+        <field name="title" type="string"/>
+        <field name="slug" type="string"/>
+        <field name="body" type="text"/>
+
+        <many-to-one field="article"
+                     target-entity="Support\KnowledgeBase\Domain\Article\Article">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+
+            <join-column on-delete="CASCADE"/>
+        </many-to-one>
+
+        <many-to-one field="createdBy"
+                     target-entity="Support\Admin\Domain\Account\User">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+
+            <join-column on-delete="CASCADE"/>
+        </many-to-one>
+
+        <many-to-many field="categories"
+                      target-entity="Support\KnowledgeBase\Domain\Category\Category"
+                      orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+
+            <join-table name="article_revision_category">
+                <inverse-join-columns>
+                    <join-column on-delete="CASCADE"/>
+                </inverse-join-columns>
+                <join-columns>
+                    <join-column on-delete="CASCADE"/>
+                </join-columns>
+            </join-table>
+        </many-to-many>
+    </entity>
+</doctrine-mapping>

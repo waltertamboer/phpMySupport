@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+use Laminas\ConfigAggregator\ConfigAggregator;
+
+return [
+    ConfigAggregator::ENABLE_CACHE => false,
+    'debug' => true,
+    'router' => [
+        'fastroute' => [
+            'cache_enabled' => false,
+        ],
+    ],
+];
