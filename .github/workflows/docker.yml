@@ -19,6 +19,9 @@ jobs:
 
       - name: Login to registry
         run: echo $GHCR_TOKEN | docker login ghcr.io -u $GHCR_USERNAME --password-stdin
+        env:
+          GHCR_USERNAME: ${{secrets.GHCR_USERNAME}}
+          GHCR_TOKEN: ${{secrets.GHCR_TOKEN}}
 
       - name: Build docker image
         run: echo Build ghcr.io/OWNER/IMAGE_NAME:latest
