@@ -1,8 +1,8 @@
-name: PHP Composer
+name: Docker
 
 on:
   workflow_run:
-    workflows: [ "Test Application" ]
+    workflows: [ "Test" ]
     types:
       - completed
 
