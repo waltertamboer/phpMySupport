@@ -25,11 +25,111 @@ return [
             'cache_file' => 'data/cache/fastroute.php.cache',
         ],
     ],
-    'support' => [
+    'phpsupport' => [
         'siteTitle' => 'phpMySupport',
-        'siteLink' => '/',
-        'enableSearch' => true,
-        'leftMenuItems' => [],
-        'rightMenuItems' => [],
+        'siteDescription' => null,
+        'siteBasePath' => '/',
+        'siteHomepage' => null,
+        'siteSearchEnabled' => true,
+        'tinyMceApiKey' => '',
+        'tinyMceConfig' => [
+            'selector' => '#bodyContent',
+            'block_formats' => 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3',
+            'plugins' => implode(' ', [
+                'a11ychecker',
+                'advlist',
+                'advcode',
+                'advtable',
+                'autolink',
+                'casechange',
+                'checklist',
+                'export',
+                'formatpainter',
+                'image',
+                'imagetools',
+                'link',
+                'linkchecker',
+                'lists',
+                'media',
+                'mediaembed',
+                'pageembed',
+                'powerpaste',
+                'table',
+                'tinymcespellchecker',
+                'wordcount',
+            ]),
+            'toolbar' => [
+                [
+                    'name' => 'history',
+                    'items' => [
+                        'undo',
+                        'redo',
+                    ],
+                ],
+                [
+                    'name' => 'styles',
+                    'items' => [
+                        'styleselect',
+                    ],
+                ],
+                [
+                    'name' => 'formatting',
+                    'items' => [
+                        'bold',
+                        'italic',
+                        'underline',
+                        'strikethrough',
+                        'subscript',
+                        'superscript',
+                    ],
+                ],
+                [
+                    'name' => 'alignment',
+                    'items' => [
+                        'alignnone',
+                        'alignleft',
+                        'aligncenter',
+                        'alignright',
+                        'alignjustify',
+                    ],
+                ],
+                [
+                    'name' => 'lists',
+                    'items' => [
+                        'bullist',
+                        'numlist',
+                    ],
+                ],
+                [
+                    'name' => 'indentation',
+                    'items' => [
+                        'outdent',
+                        'indent',
+                    ],
+                ],
+                [
+                    'name' => 'media',
+                    'items' => [
+                        'link',
+                        'unlink',
+                        'blockquote',
+                        'image',
+                        'table',
+                        'pageembed',
+                    ],
+                ],
+                [
+                    'name' => 'tools',
+                    'items' => [
+                        'casechange',
+                        'checklist',
+                        'code',
+                    ],
+                ],
+            ],
+            'toolbar_mode' => 'floating',
+            'images_upload_url' => '/admin/media/create?tinymce=true',
+            'automatic_uploads' => true,
+        ],
     ],
 ];

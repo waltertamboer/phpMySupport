@@ -13,12 +13,14 @@ use Mezzio\Authentication\UserRepository\Htpasswd;
 use Mezzio\Authentication\UserRepositoryInterface;
 use Mezzio\Container\ApplicationConfigInjectionDelegator;
 use Support\System\Application\Middleware\PageNotFound;
+use Support\System\Domain\ApplicationConfig;
 use Support\System\Domain\Bus\Command\CommandBus;
 use Support\System\Domain\Bus\Query\QueryBus;
 use Support\System\Infrastructure\Doctrine\ORM\EntityManagerFactory;
 use Support\System\Infrastructure\Doctrine\ORM\MezzioAuthenticationUserRepository;
 use Support\System\Infrastructure\Doctrine\ORM\MezzioAuthenticationUserRepositoryFactory;
 use Support\System\Infrastructure\Factory;
+use Support\System\Infrastructure\Twig\ApplicationRuntime;
 use Support\System\Infrastructure\Twig\HeaderMenuItemsRuntime;
 
 final class ConfigProvider
@@ -53,9 +55,10 @@ final class ConfigProvider
                 ],
             ],
             'factories' => [
+                ApplicationConfig::class => Factory\ApplicationConfigFactory::class,
                 CommandBus::class => Factory\CommandBusFactory::class,
                 MezzioAuthenticationUserRepository::class => MezzioAuthenticationUserRepositoryFactory::class,
-                HeaderMenuItemsRuntime::class => Factory\HeaderMenuItemsRuntimeFactory::class,
+                ApplicationRuntime::class => Factory\ApplicationRuntimeFactory::class,
                 EntityManagerInterface::class => EntityManagerFactory::class,
                 PageNotFound::class => Factory\PageNotFoundFactory::class,
                 QueryBus::class => Factory\QueryBusFactory::class,
@@ -85,7 +88,7 @@ final class ConfigProvider
             'assets_url' => '/',
             'assets_version' => 'v1',
             'extensions' => [
-                HeaderMenuItemsRuntime::class,
+                ApplicationRuntime::class,
             ],
             'globals' => [],
             'optimizations' => -1, // -1: Enable all (default), 0: disable optimizations

@@ -46,6 +46,9 @@ final class Create implements RequestHandlerInterface
             $formData = $request->getParsedBody();
 
             $selectedCategories = array_filter((array)$formData['categories'] ?? []);
+            if (count($selectedCategories) === 0) {
+                $selectedCategories = [ '' ];
+            }
             $formData['categories'] = $selectedCategories;
 
             $formTitle = $formData['title'] ?? '';

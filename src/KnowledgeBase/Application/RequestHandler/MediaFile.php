@@ -6,8 +6,6 @@ namespace Support\KnowledgeBase\Application\RequestHandler;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Laminas\Diactoros\Response;
-use Laminas\Diactoros\Response\JsonResponse;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -18,7 +16,6 @@ use Support\System\Application\Exception\ResourceNotFound;
 final class MediaFile implements RequestHandlerInterface
 {
     public function __construct(
-        private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
     ) {
     }

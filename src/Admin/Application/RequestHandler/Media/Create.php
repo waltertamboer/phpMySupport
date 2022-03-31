@@ -6,6 +6,7 @@ namespace Support\Admin\Application\RequestHandler\Media;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Laminas\Diactoros\UploadedFile;
 use Mezzio\Authentication\UserInterface;
@@ -52,6 +53,14 @@ final class Create implements RequestHandlerInterface
 
                 $this->entityManager->persist($file);
                 $this->entityManager->flush();
+
+                $tinymce = $request->getQueryParams()['tinymce'] ?? '';
+
+                if ($tinymce === 'true') {
+                    return new JsonResponse([
+                        'location' => '/files/' . $file->getId()->toString(),
+                    ]);
+                }
             }
 
             return new RedirectResponse('/admin/media');
