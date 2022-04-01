@@ -1,0 +1,45 @@
+{% extends '@site/layout/default.html.twig' %}
+
+{% block title %}Category{% endblock %}
+
+{% block content %}
+    <div class="container-sm mt-3">
+        {% if articles | length == 0 %}
+            <div class="row">
+                <div class="col">
+                    <main>
+                        <h1>{{ category.lastRevision.name }}</h1>
+
+                        <p>
+                            No articles available.
+                        </p>
+                    </main>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if articles | length != 0 %}
+            <div class="row">
+                <div class="col">
+                    <main>
+                        <h1>{{ category.lastRevision.name }}</h1>
+
+                        <ul class="article-list">
+                            {% for article in articles %}
+                                <li>
+                                    <a href="{{ url('article', {
+                                        slug: article.lastRevision.slug
+                                    }) }}">
+                                        <span class="ti-file"></span>
+
+                                        {{ article.lastRevision.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </main>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

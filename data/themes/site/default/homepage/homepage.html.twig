@@ -1,0 +1,89 @@
+{% extends '@site/layout/default.html.twig' %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block content %}
+    <section class="homepage-search-box">
+        <div class="container-sm">
+            <div class="row">
+                <div class="col">
+                    <h1>How can we help you?</h1>
+
+                    <form action="{{ url('search') }}"
+                          method="GET"
+                          autocomplete="off"
+                          class="d-inline-block">
+                        <div class="input-group d-flex">
+                            <input type="text"
+                                   name="q"
+                                   title="search-query"
+                                   class="search-query flex-grow-1"
+                                   placeholder="Search the knowledge base"
+                                   aria-labelledby="Search the knowledge base"
+                                   value="">
+
+                            <button type="submit" aria-labelledby="Search">
+                                <i class="icon-search lp"></i>
+                                <span>Search</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if categories | length == 0 %}
+        <section class="mt-4">
+            <div class="container-sm">
+                <div class="row">
+                    <p class="text-center">
+                        No categories configured yet.
+                    </p>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    {% if categories | length != 0 %}
+        <section class="mt-4">
+            <div class="container-sm">
+                <div class="row">
+                    {% for item in categories %}
+                        <div class="col-3">
+                            <section class="category-box mb-4">
+                                <a href="{{ url('category', {
+                                    'slug': item.category.lastRevision.slug
+                                }) }}">
+                                    <div class="category-box-logo">
+                                        {% if item.category.lastRevision.thumbnail %}
+                                            <img src="{{ url('media-file', {
+                                                id: item.category.lastRevision.thumbnail.id
+                                            }) }}" alt="{{ item.category.lastRevision.name }}">
+                                        {% else %}
+                                            <img src="" alt="{{ item.category.lastRevision.name }}">
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="category-box-name mt-3">
+                                        <h2>
+                                            {{ item.category.lastRevision.name }}
+                                        </h2>
+                                    </div>
+
+                                    <div>
+                                        {% if item.articleCount == 1 %}
+                                            {{ item.articleCount }} article
+                                        {% else %}
+                                            {{ item.articleCount }} articles
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            </section>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}

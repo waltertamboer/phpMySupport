@@ -1,0 +1,89 @@
+{% extends '@admin/layout/admin.html.twig' %}
+
+{% block title %}Update Article{% endblock %}
+
+{% block head_scripts %}
+    <script>
+        initializeSlugsForFormFields('title', 'slug');
+        initializeCategoryFields();
+    </script>
+
+    <script src="https://cdn.tiny.cloud/1/{{ tinyMceApiKey() }}/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({{ tinyMceConfig() | json_encode | raw }});
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+                <h1>Edit Article {{ entity.lastRevision.title }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% include '@admin/article/submenu.html.twig' %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ errorMsg }}
+                    </div>
+                {% endif %}
+
+                <form action="" method="post">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" name="title" id="title" class="form-control" autocomplete="off" value="{{ formData.title }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="slug" class="form-label">Slug</label>
+                        <input type="text" name="slug" id="slug" class="form-control" autocomplete="off" value="{{ formData.slug }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <div id="category-container">
+                            {% for selectedCategory in formData.categories %}
+                                <span class="input-group mb-3">
+                                    <select id="category" name="categories[]" class="form-control">
+                                        <option value="">None</option>
+                                        {% for category in categories %}
+                                            <option value="{{ category.id }}"{% if category.id == selectedCategory %} selected{% endif %}>
+                                                {{ category.lastRevision.name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="button" class="btn btn-danger remove-category-button">
+                                        -
+                                    </button>
+                                    <button type="button" class="btn btn-secondary add-category-button">
+                                        +
+                                    </button>
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="bodyContent" class="form-label">Body</label>
+                        <textarea name="body" id="bodyContent" class="form-control"
+                                  style="min-height: 500px;">{{ formData.body }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

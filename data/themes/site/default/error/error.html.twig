@@ -1,0 +1,9 @@
+{% extends '@site/layout/default.html.twig' %}
+
+{% block title %}{{ status }} {{ reason }}{% endblock %}
+
+{% block content %}
+    <h1>Oops!</h1>
+    <h2>This is awkward.</h2>
+    <p>We encountered a {{ status }} {{ reason }} error.</p>
+{% endblock %}

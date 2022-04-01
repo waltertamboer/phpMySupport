@@ -1,0 +1,24 @@
+{% extends '@site/layout/default.html.twig' %}
+
+{% block title %}404 Not Found{% endblock %}
+
+{% block content %}
+    <div class="container-sm mt-3">
+        <div class="row">
+            <div class="col">
+                <main>
+                    <h1>Page not found</h1>
+
+                    <p>
+                        We encountered a 404 Not Found error.
+                    </p>
+
+                    <p>
+                        You are looking for something that doesn't exist or may have moved. Check out one of
+                        the links on this page or head back to <a href="{{ path('home') }}">Home</a>.
+                    </p>
+                </main>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="{{ asset('css/bootstrap.min.css') }}"
+              rel="stylesheet"
+              integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+              crossorigin="anonymous">
+
+        <link rel="stylesheet" type="text/css" href="{{ asset('fonts/themify/themify-icons.css') }}">
+
+        <title>{% block title %}{% endblock %} - {{ siteTitle() }}</title>
+
+        <style>
+            @media print {
+                .container-sm {
+                    max-width: 100%;
+                    width: 100%;
+                }
+
+                article, main {
+                    margin: 0;
+                    padding: 0;
+                }
+            }
+
+            body {
+                color: #333;
+            }
+
+            a, a:hover {
+                color: #333;
+                text-decoration: none;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            article, main {
+                padding: 0;
+            }
+
+            .article-meta-footer {
+                font-size: 0.8rem;
+                text-align: right;
+            }
+
+            .search-result-item {
+                border-bottom: 1px solid #333;
+                margin-bottom: 2rem;
+            }
+
+            .homepage-search-box {
+                background-color: #eee;
+                padding: 2rem 0;
+                text-align: center;
+            }
+
+            .homepage-search-box input {
+                border: 1px solid #333;
+                padding: 0.75rem 1rem;
+            }
+
+            .homepage-search-box button {
+                background-color: #333;
+                border: 1px solid #333;
+                color: #fff;
+                padding: 0.75rem 1rem;
+            }
+
+            .homepage-search-box h1 {
+                margin-bottom: 2rem;
+            }
+
+            .homepage-search-box form {
+                width: 70%;
+            }
+
+            .article-list {
+                list-style-type: none;
+                margin-left: 0;
+                padding-left: 0;
+            }
+
+            .article-list li {
+                margin-bottom: 0.5rem;
+            }
+
+            .article-list span {
+                margin-right: 0.5rem;
+            }
+
+            .article-meta-footer {
+                margin-top: 1rem;
+            }
+
+            .category-box {
+                background-color: #eee;
+            }
+
+            .category-box a {
+                display: block;
+                padding: 2rem 1rem;
+                text-align: center;
+            }
+
+            .category-box-logo img {
+                height: 90px;
+                width: 90px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg d-print-none">
+            <div class="container-sm">
+                <a class="navbar-brand" href="{{ url('home') }}">{{ siteTitle() }}</a>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="me-auto"></div>
+
+                    {% if siteSearchEnabled() %}
+                        <form class="d-flex" action="{{ url('search') }}" method="get">
+                            <input class="form-control me-2"
+                                   name="q"
+                                   type="search"
+                                   placeholder="Search"
+                                   aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        {% block content %}{% endblock %}
+
+        <script src="{{ asset('js/bootstrap.bundle.min.js') }}"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous"></script>
+    </body>
+</html>
+

@@ -1,0 +1,37 @@
+{% extends '@admin/layout/admin.html.twig' %}
+
+{% block title %}Delete Article{% endblock %}
+
+{% block content %}
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+                <h1>Delete Article</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% include '@admin/article/submenu.html.twig' %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <p>
+                    Are you sure you want to delete {{ entity.lastRevision().title }} ?
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <form action="" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </form>
+
+                <a href="{{ url('admin-article-overview') }}" class="btn btn-secondary">No</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

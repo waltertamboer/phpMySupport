@@ -1,0 +1,70 @@
+{% extends '@admin/layout/admin.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+                <h1>Users</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% include '@admin/user/submenu.html.twig' %}
+            </div>
+        </div>
+
+        {% if users | length > 0 %}
+            <div class="row">
+                <div class="col">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url('admin-user-update', {
+                                            id: user.id
+                                        }) }}">{{ user.username }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url('admin-user-update', {
+                                            id: user.id
+                                        }) }}">{{ user.role }}</a>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="{{ url('admin-user-update', {
+                                            id: user.id
+                                        }) }}">Edit</a>
+                                        {% if currentUser.id != user.id %}
+                                            -
+                                            <a href="{{ url('admin-user-delete', {
+                                                id: user.id
+                                            }) }}">Delete</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col">
+                    <p>
+                        No users available.
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

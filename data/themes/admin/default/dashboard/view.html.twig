@@ -1,0 +1,109 @@
+{% extends '@admin/layout/admin.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+
+                <h1>Dashboard</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h2>Most populair articles</h2>
+
+                {% if populairArticles | length == 0 %}
+                    <p>No articles available.</p>
+                {% else %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th class="text-end">Views</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set counter = 0 %}
+                            {% for populairArticle in populairArticles %}
+                                {% set counter = counter + 1 %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url('article', {
+                                            slug: populairArticle.articleSlug
+                                        }) }}">
+                                            {{ counter }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url('article', {
+                                            slug: populairArticle.articleSlug
+                                        }) }}">
+                                            {{ populairArticle.articleTitle }}
+                                        </a>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="{{ url('article', {
+                                            slug: populairArticle.articleSlug
+                                        }) }}">
+                                            {{ populairArticle.views }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+            <div class="col">
+                <h2>Most populair categories</h2>
+
+                {% if populairCategories | length == 0 %}
+                    <p>No categories available.</p>
+                {% else %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th class="text-end">Views</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set counter = 0 %}
+                            {% for populairCategory in populairCategories %}
+                                {% set counter = counter + 1 %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url('category', {
+                                            slug: populairCategory.categorySlug
+                                        }) }}">
+                                            {{ counter }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url('category', {
+                                            slug: populairCategory.categorySlug
+                                        }) }}">
+                                            {{ populairCategory.categoryName }}
+                                        </a>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="{{ url('category', {
+                                            slug: populairCategory.categorySlug
+                                        }) }}">
+                                            {{ populairCategory.views }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

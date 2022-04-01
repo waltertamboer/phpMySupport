@@ -1,0 +1,43 @@
+{% extends '@site/layout/default.html.twig' %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+    <div class="container-sm mt-3">
+        <div class="row">
+            <div class="col">
+                {% if noQueryError or articles | length == 0 %}
+                    <main>
+                        <h1>Search Results</h1>
+
+                        <p>
+                            No articles found matching your search query.
+                        </p>
+                    </main>
+                {% endif %}
+
+                {% if articles | length != 0 %}
+                    <main>
+                        <h1>Search Results</h1>
+                        {% for article in articles %}
+
+                            <section class="search-result-item">
+                                <h2>
+                                    <a href="{{ url('article', {
+                                        slug: article.lastRevision.slug
+                                    }) }}">
+                                        {{ article.lastRevision.title }}
+                                    </a>
+                                </h2>
+
+                                <p>
+                                    {{ article.lastRevision.introduction }}
+                                </p>
+                            </section>
+                        {% endfor %}
+                    </main>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

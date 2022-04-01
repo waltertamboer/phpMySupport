@@ -1,0 +1,26 @@
+{% extends '@admin/layout/empty.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        <p>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="{{ username }}">
+        </p>
+        <p>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" value="">
+        </p>
+        <p>
+            <button type="submit">
+                Login
+            </button>
+        </p>
+        {% if error %}
+            <p>
+                Failed to authenticate.
+            </p>
+        {% endif %}
+    </form>
+{% endblock %}

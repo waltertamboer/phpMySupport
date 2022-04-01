@@ -1,0 +1,28 @@
+{% extends '@site/layout/default.html.twig' %}
+
+{% block title %}Article{% endblock %}
+
+{% block content %}
+    <div class="container-sm mt-3">
+        <article>
+            <h1>{{ article.lastRevision.title }}</h1>
+
+            <div>
+                {{ article.lastRevision.body | raw }}
+            </div>
+
+            <div class="article-meta-footer">
+                <time datetime="{{ article.lastRevision.createdAt | date }}">
+                    Last updated on {{ article.lastRevision.createdAt | date('r') }}
+                </time>
+                <span class="d-print-none ms-2">
+                    <a href="#" onclick="window.print()">
+                        <span class="ti-printer ms-2 me-1"></span>
+
+                        Print
+                    </a>
+                </span>
+            </div>
+        </article>
+    </div>
+{% endblock %}

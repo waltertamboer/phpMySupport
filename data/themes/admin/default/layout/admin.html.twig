@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="{{ asset('css/bootstrap.min.css') }}"
+              rel="stylesheet"
+              integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+              crossorigin="anonymous">
+
+        <title>{% block title %}{% endblock %} - {{ siteTitle() }}</title>
+
+        <style>
+            body {
+                background-color: #f1f1f1;
+            }
+
+            a {
+                color: #333;
+                text-decoration: none;
+            }
+
+            .navbar {
+                margin-bottom: 1rem;
+            }
+
+            .nav .nav-item:first-child .nav-link {
+                padding-left: 0;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1.25rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1.25rem;
+            }
+        </style>
+
+        <script>
+            function slugify(str, separator = '-') {
+                return str
+                    .toString()
+                    .normalize('NFD')                   // split an accented letter in the base letter and the acent
+                    .replace(/[\u0300-\u036f]/g, '')   // remove all previously split accents
+                    .toLowerCase()
+                    .replace(/[^a-z0-9 -]/g, '')   // remove all chars not letters, numbers and spaces (to be replaced)
+                    .trim()
+                    .replace(/\s+/g, separator);
+            }
+
+            function initializeCategoryFields() {
+                var addCategoryRow = function () {
+                    var categoryContainer = document.getElementById('category-container');
+                    var inputGroup = this.parentElement;
+
+                    var newInputGroup = inputGroup.cloneNode(true);
+                    categoryContainer.appendChild(newInputGroup);
+
+                    var selects = newInputGroup.getElementsByTagName('select');
+
+                    for (var i = 0; i < selects.length; ++i) {
+                        selects[i].value = '';
+                    }
+
+                    updateCategoryInputGroupButtons();
+                }
+
+                var removeCategoryRow = function () {
+                    var inputGroup = this.parentElement;
+
+                    inputGroup.parentElement.removeChild(inputGroup);
+
+                    updateCategoryInputGroupButtons();
+                }
+
+                var updateCategoryInputGroupButtons = function () {
+                    var i, j, categoryContainer, inputGroup, inputGroups, addButtons, delButtons;
+
+                    categoryContainer = document.getElementById('category-container');
+                    inputGroups = categoryContainer.children;
+
+                    for (i = 0; i < inputGroups.length; ++i) {
+                        inputGroup = inputGroups[i];
+
+                        addButtons = inputGroup.getElementsByClassName('add-category-button');
+                        delButtons = inputGroup.getElementsByClassName('remove-category-button');
+
+                        if (i === inputGroups.length - 1) {
+                            for (j = 0; j < addButtons.length; ++j) {
+                                addButtons[j].classList.add('d-block');
+                                addButtons[j].classList.remove('d-none');
+                                addButtons[j].removeEventListener('click', addCategoryRow);
+                                addButtons[j].addEventListener('click', addCategoryRow);
+                            }
+
+                            for (j = 0; j < delButtons.length; ++j) {
+                                delButtons[j].classList.add('d-none');
+                                delButtons[j].classList.remove('d-block');
+                                addButtons[j].removeEventListener('click', removeCategoryRow);
+                            }
+                        } else {
+                            for (j = 0; j < addButtons.length; ++j) {
+                                addButtons[j].classList.add('d-none');
+                                addButtons[j].classList.remove('d-block');
+                                addButtons[j].removeEventListener('click', addCategoryRow);
+                            }
+
+                            for (j = 0; j < delButtons.length; ++j) {
+                                delButtons[j].classList.add('d-block');
+                                delButtons[j].classList.remove('d-none');
+                                delButtons[j].removeEventListener('click', removeCategoryRow);
+                                delButtons[j].addEventListener('click', removeCategoryRow);
+                            }
+                        }
+                    }
+                }
+
+                window.addEventListener('load', function () {
+                    updateCategoryInputGroupButtons();
+                });
+            }
+
+            function initializeSlugsForFormFields(nameField, slugField) {
+                window.addEventListener('load', function () {
+                    var formFieldName = document.getElementById(nameField);
+                    var formFieldSlug = document.getElementById(slugField);
+                    var canUpdateSlug = true;
+
+                    formFieldName.addEventListener('keyup', function () {
+                        if (!canUpdateSlug) {
+                            return;
+                        }
+
+                        formFieldSlug.value = slugify(this.value);
+                    });
+
+                    formFieldSlug.addEventListener('change', function () {
+                        canUpdateSlug = false;
+                        this.value = slugify(this.value);
+                    });
+                });
+            }
+        </script>
+
+        {% block head_scripts %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light d-print-none">
+            <div class="container-sm">
+                <a class="navbar-brand" href="{{ url('admin-dashboard') }}">{{ siteTitle() }}</a>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url('admin-article-overview') }}">
+                                Articles
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url('admin-category-overview') }}">
+                                Categories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url('admin-media-overview') }}">
+                                Media
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url('admin-user-overview') }}">
+                                Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url('admin-logout') }}">
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        {% block content %}{% endblock %}
+
+        <script src="{{ asset('js/bootstrap.bundle.min.js') }}"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous"></script>
+
+    </body>
+</html>
+
