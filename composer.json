@@ -1,5 +1,5 @@
 {
-    "name": "waltertamboer/php-support-system",
+    "name": "waltertamboer/phpmysupport",
     "description": "This project sets up a support system to help customers.",
     "license": "proprietary",
     "require": {

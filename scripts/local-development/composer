@@ -4,5 +4,5 @@ docker run \
   --rm \
   -it \
   -v $(pwd):/opt/phpmysupport \
-  ghcr.io/waltertamboer/php-support-system:php81-fpm-ci \
+  ghcr.io/waltertamboer/phpmysupport:php81-fpm-ci \
   composer $@
