@@ -25,25 +25,25 @@ jobs:
           GHCR_TOKEN: ${{secrets.GHCR_TOKEN}}
 
       - name: Build NGINX
-        run: docker build -t ghcr.io/waltertamboer/phpMySupport:nginx --file .docker/nginx/Dockerfile .
+        run: docker build -t ghcr.io/waltertamboer/phpmysupport:nginx --file .docker/nginx/Dockerfile .
 
       - name: Build PHP-FPM Production
-        run: docker build --force-rm --target production --tag ghcr.io/waltertamboer/phpMySupport:php81-fpm --file .docker/php-fpm/Dockerfile .
+        run: docker build --force-rm --target production --tag ghcr.io/waltertamboer/phpmysupport:php81-fpm --file .docker/php-fpm/Dockerfile .
 
       - name: Build PHP-FPM Dev
-        run: docker build --force-rm --target development --tag ghcr.io/waltertamboer/phpMySupport:php81-fpm-dev --file .docker/php-fpm/Dockerfile .
+        run: docker build --force-rm --target development --tag ghcr.io/waltertamboer/phpmysupport:php81-fpm-dev --file .docker/php-fpm/Dockerfile .
 
       - name: Build PHP-FPM CI
-        run: docker build --force-rm --target ci --tag ghcr.io/waltertamboer/phpMySupport:php81-fpm-ci --file .docker/php-fpm/Dockerfile .
+        run: docker build --force-rm --target ci --tag ghcr.io/waltertamboer/phpmysupport:php81-fpm-ci --file .docker/php-fpm/Dockerfile .
 
-      - name: Publishing ghcr.io/waltertamboer/phpMySupport:nginx
-        run: docker push ghcr.io/waltertamboer/phpMySupport:nginx
+      - name: Publishing ghcr.io/waltertamboer/phpmysupport:nginx
+        run: docker push ghcr.io/waltertamboer/phpmysupport:nginx
 
-      - name: Publishing ghcr.io/waltertamboer/phpMySupport:php81-fpm
-        run: docker push ghcr.io/waltertamboer/phpMySupport:php81-fpm
+      - name: Publishing ghcr.io/waltertamboer/phpmysupport:php81-fpm
+        run: docker push ghcr.io/waltertamboer/phpmysupport:php81-fpm
 
-      - name: Publishing ghcr.io/waltertamboer/phpMySupport:php81-fpm-dev
-        run: docker push ghcr.io/waltertamboer/phpMySupport:php81-fpm-dev
+      - name: Publishing ghcr.io/waltertamboer/phpmysupport:php81-fpm-dev
+        run: docker push ghcr.io/waltertamboer/phpmysupport:php81-fpm-dev
 
-      - name: Publishing ghcr.io/waltertamboer/phpMySupport:php81-fpm-ci
-        run: docker push ghcr.io/waltertamboer/phpMySupport:php81-fpm-ci
+      - name: Publishing ghcr.io/waltertamboer/phpmysupport:php81-fpm-ci
+        run: docker push ghcr.io/waltertamboer/phpmysupport:php81-fpm-ci
