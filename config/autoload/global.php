@@ -26,6 +26,8 @@ return [
         ],
     ],
     'phpsupport' => [
+        'siteTheme' => 'default',
+        'siteThemeAdmin' => 'default',
         'siteTitle' => 'phpMySupport',
         'siteDescription' => null,
         'siteBasePath' => '/',

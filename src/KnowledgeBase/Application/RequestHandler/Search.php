@@ -46,7 +46,7 @@ final class Search implements RequestHandlerInterface
         }
 
         return new HtmlResponse($this->renderer->render(
-            '@knowledge-base/search.html.twig',
+            '@site/knowledge-base/search.html.twig',
             [
                 'articles' => $articles,
                 'noQueryError' => $noQueryError,

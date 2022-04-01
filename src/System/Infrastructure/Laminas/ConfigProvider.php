@@ -22,6 +22,7 @@ use Support\System\Infrastructure\Doctrine\ORM\MezzioAuthenticationUserRepositor
 use Support\System\Infrastructure\Factory;
 use Support\System\Infrastructure\Twig\ApplicationRuntime;
 use Support\System\Infrastructure\Twig\HeaderMenuItemsRuntime;
+use Twig\Environment;
 
 final class ConfigProvider
 {
@@ -53,6 +54,9 @@ final class ConfigProvider
                 Application::class => [
                     ApplicationConfigInjectionDelegator::class,
                 ],
+                Environment::class => [
+                    Factory\TwigEnvironmentDelegator::class,
+                ],
             ],
             'factories' => [
                 ApplicationConfig::class => Factory\ApplicationConfigFactory::class,
@@ -70,13 +74,7 @@ final class ConfigProvider
     {
         return [
             'extension' => 'html.twig',
-            'paths' => [
-                'admin' => [ 'data/themes/default/admin' ],
-                'error' => [ 'data/themes/default/error' ],
-                'homepage' => [ 'data/themes/default/homepage' ],
-                'knowledge-base' => [ 'data/themes/default/knowledge-base' ],
-                'layout' => [ 'data/themes/default/layout' ],
-            ],
+            'paths' => [], // Do not populate this, the paths are populated in the TwigEnvironmentDelegator
         ];
     }
 

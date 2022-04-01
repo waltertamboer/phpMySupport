@@ -25,7 +25,7 @@ final class Homepage implements RequestHandlerInterface
         $categories = $this->queryBus->query(new GetCategoryOverview());
 
         return new HtmlResponse($this->renderer->render(
-            '@homepage/homepage.html.twig',
+            '@site/homepage/homepage.html.twig',
             [
                 'categories' => $categories,
             ]

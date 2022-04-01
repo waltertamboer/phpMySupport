@@ -38,7 +38,7 @@ final class Article implements RequestHandlerInterface
         $this->commandBus->dispatch(new RegisterArticleView($article, $request));
 
         return new HtmlResponse($this->renderer->render(
-            '@knowledge-base/article.html.twig',
+            '@site/knowledge-base/article.html.twig',
             [
                 'article' => $article,
             ]

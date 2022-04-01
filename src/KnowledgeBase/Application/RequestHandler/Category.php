@@ -40,7 +40,7 @@ final class Category implements RequestHandlerInterface
         $articles = $this->queryBus->query(new FindArticlesForCategory($category));
 
         return new HtmlResponse($this->renderer->render(
-            '@knowledge-base/category.html.twig',
+            '@site/knowledge-base/category.html.twig',
             [
                 'category' => $category,
                 'articles' => $articles,

@@ -17,6 +17,16 @@ final class ApplicationConfig
         $this->config = $config;
     }
 
+    public function getSiteTheme(): string
+    {
+        return $this->config['siteTheme'] ?? 'default';
+    }
+
+    public function getSiteThemeAdmin(): string
+    {
+        return $this->config['siteThemeAdmin'] ?? 'admin';
+    }
+
     public function getSiteTitle(): string
     {
         return $this->config['siteTitle'] ?? '';
