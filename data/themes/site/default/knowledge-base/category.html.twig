@@ -1,6 +1,6 @@
 {% extends '@site/layout/default.html.twig' %}
 
-{% block title %}Category{% endblock %}
+{% block title %}Articles related to {{ category.lastRevision.name }} - {{ siteTitle() }}{% endblock %}
 
 {% block content %}
     <div class="container-sm mt-3">
