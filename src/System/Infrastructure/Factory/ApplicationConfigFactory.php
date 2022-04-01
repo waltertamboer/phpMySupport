@@ -13,6 +13,6 @@ final class ApplicationConfigFactory
     {
         $config = $container->get('config');
 
-        return new ApplicationConfig((array)($config['phpsupport'] ?? []));
+        return new ApplicationConfig((array)($config['phpMySupport'] ?? []));
     }
 }

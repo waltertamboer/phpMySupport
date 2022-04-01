@@ -9,35 +9,35 @@ volumes:
 services:
   database-server:
     image: postgres:14
-    container_name: phpsupport-database-server
+    container_name: phpmysupport-database-server
     environment:
-      POSTGRES_DB: "phpsupport"
-      POSTGRES_USER: "phpsupport"
-      POSTGRES_PASSWORD: "phpsupport"
+      POSTGRES_DB: "phpmysupport"
+      POSTGRES_USER: "phpmysupport"
+      POSTGRES_PASSWORD: "phpmysupport"
     volumes:
       - database-data:/var/lib/postgresql/data
       - ./:/data/
 
   php-fpm:
-    image: ghcr.io/waltertamboer/php-support-system:php81-fpm-dev
-    container_name: phpsupport-php-fpm
+    image: ghcr.io/waltertamboer/phpmysupport:php81-fpm-dev
+    container_name: phpmysupport-php-fpm
     volumes:
-      - ./:/opt/phpsupport
+      - ./:/opt/phpmysupport
       - php-socket:/var/run/php
     user: "0"
-    working_dir: /opt/phpsupport
+    working_dir: /opt/phpmysupport
     links:
       - database-server
 
   webserver:
-    image: ghcr.io/waltertamboer/php-support-system:nginx
-    container_name: phpsupport-webserver
+    image: ghcr.io/waltertamboer/phpmysupport:nginx
+    container_name: phpmysupport-webserver
     volumes:
-      - ./:/opt/phpsupport
+      - ./:/opt/phpmysupport
       - php-socket:/var/run/php
-    working_dir: /opt/phpsupport
+    working_dir: /opt/phpmysupport
     links:
       - database-server
     environment:
-      - VIRTUAL_HOST=php-support-system.docker
+      - VIRTUAL_HOST=phpmysupport.docker
       - VIRTUAL_PORT=8080

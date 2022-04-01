@@ -3,6 +3,6 @@
 docker run \
   --rm \
   -it \
-  -v $(pwd):/opt/phpsupport \
+  -v $(pwd):/opt/phpmysupport \
   ghcr.io/waltertamboer/php-support-system:php81-fpm-ci \
   composer $@

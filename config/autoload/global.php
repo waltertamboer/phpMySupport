@@ -25,7 +25,7 @@ return [
             'cache_file' => 'data/cache/fastroute.php.cache',
         ],
     ],
-    'phpsupport' => [
+    'phpMySupport' => [
         'siteTheme' => 'default',
         'siteThemeAdmin' => 'default',
         'siteTitle' => 'phpMySupport',

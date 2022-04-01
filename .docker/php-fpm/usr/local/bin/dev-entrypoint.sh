@@ -3,7 +3,7 @@
 # Stop on errors
 set -e
 
-_VHOST_DIR=/opt/phpsupport
+_VHOST_DIR=/opt/phpmysupport
 
 # Set the apache user and group to match the host user.
 OWNER=$(stat -c '%u' "$_VHOST_DIR")
