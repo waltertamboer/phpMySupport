@@ -20,6 +20,9 @@ services:
 
   php-fpm:
     image: ghcr.io/waltertamboer/phpmysupport:php81-fpm-dev
+    build:
+      context: ./
+      dockerfile: .docker/php-fpm/Dockerfile
     container_name: phpmysupport-php-fpm
     volumes:
       - ./:/opt/phpmysupport
@@ -31,6 +34,9 @@ services:
 
   webserver:
     image: ghcr.io/waltertamboer/phpmysupport:nginx
+    build:
+      context: ./
+      dockerfile: .docker/nginx/Dockerfile
     container_name: phpmysupport-webserver
     volumes:
       - ./:/opt/phpmysupport
