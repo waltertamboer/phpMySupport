@@ -75,7 +75,10 @@ final class Create implements RequestHandlerInterface
 
                 foreach ($selectedCategories as $category) {
                     $category = $this->entityManager->find(Category::class, $category);
-                    $article->getLastRevision()->addCategory($category);
+
+                    if ($category !== null) {
+                        $article->getLastRevision()->addCategory($category);
+                    }
                 }
 
                 $this->entityManager->persist($article);

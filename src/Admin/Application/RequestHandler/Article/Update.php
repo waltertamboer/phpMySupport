@@ -87,7 +87,9 @@ final class Update implements RequestHandlerInterface
                 foreach ($selectedCategories as $category) {
                     $category = $this->entityManager->find(Category::class, $category);
 
-                    $entityRevision->addCategory($category);
+                    if ($category !== null) {
+                        $entityRevision->addCategory($category);
+                    }
                 }
 
                 $this->entityManager->flush();
