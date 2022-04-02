@@ -3,7 +3,27 @@
 {% block title %}{{ status }} {{ reason }}{% endblock %}
 
 {% block content %}
-    <h1>Oops!</h1>
-    <h2>This is awkward.</h2>
-    <p>We encountered a {{ status }} {{ reason }} error.</p>
+    <div class="container-sm mt-3">
+        <div class="row">
+            <div class="col">
+                <main>
+                    <h1>Oops!</h1>
+                    <h2>This is awkward.</h2>
+                    <p>We encountered a {{ status }} {{ reason }} error.</p>
+
+                    {% if error %}
+                        <h2>Exception</h2>
+
+                        <dl>
+                            <dt>Code</dt>
+                            <dd>{{ error.code }}</dd>
+
+                            <dt>Message</dt>
+                            <dd>{{ error.message }}</dd>
+                        </dl>
+                    {% endif %}
+                </main>
+            </div>
+        </div>
+    </div>
 {% endblock %}
