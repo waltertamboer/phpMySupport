@@ -8,8 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Mezzio\Application;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\Session\PhpSession;
-use Mezzio\Authentication\UserInterface;
-use Mezzio\Authentication\UserRepository\Htpasswd;
 use Mezzio\Authentication\UserRepositoryInterface;
 use Mezzio\Container\ApplicationConfigInjectionDelegator;
 use Support\System\Application\Middleware\PageNotFound;
@@ -21,7 +19,6 @@ use Support\System\Infrastructure\Doctrine\ORM\MezzioAuthenticationUserRepositor
 use Support\System\Infrastructure\Doctrine\ORM\MezzioAuthenticationUserRepositoryFactory;
 use Support\System\Infrastructure\Factory;
 use Support\System\Infrastructure\Twig\ApplicationRuntime;
-use Support\System\Infrastructure\Twig\HeaderMenuItemsRuntime;
 use Twig\Environment;
 
 final class ConfigProvider

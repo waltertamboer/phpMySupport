@@ -43,6 +43,7 @@ $aggregator = new ConfigAggregator([
     // Overrides
     new PhpFileProvider(realpath(__DIR__) . '/autoload/{{,*.}global,{,*.}local}.php'),
     new PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
+    new \Support\System\Infrastructure\Laminas\ConfigAggregator\EnvironmentProvider(),
 ], $cacheConfig['config_cache_path']);
 
 return $aggregator->getMergedConfig();
