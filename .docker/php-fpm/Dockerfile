@@ -75,5 +75,10 @@ COPY --chown=root:www-data public /opt/phpmysupport/public
 COPY --chown=root:www-data src /opt/phpmysupport/src
 COPY --chown=root:www-data vendor /opt/phpmysupport/vendor
 
-RUN chmod -R g+rw /opt/phpmysupport/data/tmp /opt/phpmysupport/data/logs /opt/phpmysupport/data/cache; \
+RUN chmod -R g+rw \
+    /opt/phpmysupport/data/cache \
+    /opt/phpmysupport/data/logs \
+    /opt/phpmysupport/data/media \
+    /opt/phpmysupport/data/tmp \
+    /opt/phpmysupport/public/files; \
     chgrp www-data /opt/phpmysupport;
