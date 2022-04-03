@@ -36,6 +36,10 @@ return [
         'tinyMceApiKey' => '',
         'tinyMceConfig' => [
             'selector' => '#bodyContent',
+            'toolbar_mode' => 'floating',
+            'image_advtab' => true,
+            'images_upload_url' => '/admin/media/create?tinymce=true',
+            'automatic_uploads' => true,
             'plugins' => implode(' ', [
                 'a11ychecker',
                 'advlist',
@@ -44,6 +48,7 @@ return [
                 'autolink',
                 'casechange',
                 'checklist',
+                'colorpicker',
                 'export',
                 'formatpainter',
                 'image',
@@ -71,6 +76,8 @@ return [
                     'name' => 'styles',
                     'items' => [
                         'styleselect',
+                        'backcolor',
+                        'forecolor',
                     ],
                 ],
                 [
@@ -128,9 +135,6 @@ return [
                     ],
                 ],
             ],
-            'toolbar_mode' => 'floating',
-            'images_upload_url' => '/admin/media/create?tinymce=true',
-            'automatic_uploads' => true,
         ],
     ],
 ];
