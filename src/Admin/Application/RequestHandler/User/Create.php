@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Support\Admin\Application\RequestHandler\User;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Laminas\Crypt\Password\PasswordInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\UserInterface;
@@ -23,6 +24,7 @@ final class Create implements RequestHandlerInterface
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
+        private readonly PasswordInterface $password,
     ) {
     }
 
@@ -67,7 +69,7 @@ final class Create implements RequestHandlerInterface
             } else {
                 $currentUser = new User(
                     $formData['username'],
-                    $formData['password'],
+                    $this->password->create($formData['password']),
                     $formData['role'],
                 );
 
