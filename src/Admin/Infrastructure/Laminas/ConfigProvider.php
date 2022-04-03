@@ -61,6 +61,7 @@ final class ConfigProvider
                 RequestHandler\Media\Delete::class => Factory\Media\DeleteRequestHandlerFactory::class,
                 RequestHandler\Media\Update::class => Factory\Media\UpdateRequestHandlerFactory::class,
                 RequestHandler\Media\Overview::class => Factory\Media\OverviewRequestHandlerFactory::class,
+                RequestHandler\Media\TinyMceDialog::class => Factory\Media\TinyMceDialogHandlerFactory::class,
 
                 RequestHandler\User\Create::class => Factory\User\CreateRequestHandlerFactory::class,
                 RequestHandler\User\Delete::class => Factory\User\DeleteRequestHandlerFactory::class,
@@ -201,6 +202,15 @@ final class ConfigProvider
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
                     RequestHandler\Media\Overview::class,
+                ],
+                'allowed_methods' => [ 'GET' ],
+            ],
+            'admin-media-dialog' => [
+                'name' => 'admin-media-dialog',
+                'path' => '/admin/media/dialog',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    RequestHandler\Media\TinyMceDialog::class,
                 ],
                 'allowed_methods' => [ 'GET' ],
             ],
