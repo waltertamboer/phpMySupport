@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 
 volumes:
   database-data:
@@ -23,6 +23,7 @@ services:
     build:
       context: ./
       dockerfile: .docker/php-fpm/Dockerfile
+      target: development
     container_name: phpmysupport-php-fpm
     volumes:
       - ./:/opt/phpmysupport
