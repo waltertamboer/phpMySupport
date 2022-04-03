@@ -16,7 +16,7 @@ docker-compose exec --user 1000:1000 php-fpm bin/support migrations:migrate --no
 
 Create the admin user:
 ```
-docker-compose exec --user 1000:1000 php-fpm bin/support user:create
+docker-compose exec --user 1000:1000 php-fpm bin/support user:create --role=admin
 ```
 
 ## Updating
