@@ -44,7 +44,7 @@
                                         <a href="{{ url('admin-user-update', {
                                             id: user.id
                                         }) }}">Edit</a>
-                                        {% if currentUser.id != user.id %}
+                                        {% if authenticatedUser.id != user.id %}
                                             -
                                             <a href="{{ url('admin-user-delete', {
                                                 id: user.id

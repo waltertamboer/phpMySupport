@@ -39,7 +39,6 @@ final class Overview implements RequestHandlerInterface
         return new HtmlResponse($this->renderer->render(
             '@admin/user/overview.html.twig',
             [
-                'currentUser' => $currentUser,
                 'users' => $users,
             ],
         ));

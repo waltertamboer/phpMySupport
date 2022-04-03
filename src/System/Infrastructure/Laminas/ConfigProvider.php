@@ -19,6 +19,7 @@ use Support\System\Infrastructure\Doctrine\ORM\MezzioAuthenticationUserRepositor
 use Support\System\Infrastructure\Doctrine\ORM\MezzioAuthenticationUserRepositoryFactory;
 use Support\System\Infrastructure\Factory;
 use Support\System\Infrastructure\Twig\ApplicationRuntime;
+use Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware;
 use Twig\Environment;
 
 final class ConfigProvider
@@ -58,6 +59,7 @@ final class ConfigProvider
             'factories' => [
                 ApplicationConfig::class => Factory\ApplicationConfigFactory::class,
                 CommandBus::class => Factory\CommandBusFactory::class,
+                DefaultTemplateParamsMiddleware::class => Factory\DefaultTemplateParamsMiddlewareFactory::class,
                 MezzioAuthenticationUserRepository::class => MezzioAuthenticationUserRepositoryFactory::class,
                 ApplicationRuntime::class => Factory\ApplicationRuntimeFactory::class,
                 EntityManagerInterface::class => EntityManagerFactory::class,

@@ -103,6 +103,7 @@ final class ConfigProvider
                 'path' => '/admin/logout',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Authentication\Logout::class,
                 ],
                 'allowed_methods' => [ 'GET' ],
@@ -114,6 +115,7 @@ final class ConfigProvider
                 'path' => '/admin/dashboard',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Dashboard\View::class,
                 ],
                 'allowed_methods' => [ 'GET' ],
@@ -125,6 +127,7 @@ final class ConfigProvider
                 'path' => '/admin/articles',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Article\Overview::class,
                 ],
                 'allowed_methods' => [ 'GET' ],
@@ -134,6 +137,7 @@ final class ConfigProvider
                 'path' => '/admin/articles/create',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Article\Create::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
@@ -143,6 +147,7 @@ final class ConfigProvider
                 'path' => '/admin/articles/delete/{id}',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Article\Delete::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
@@ -152,6 +157,7 @@ final class ConfigProvider
                 'path' => '/admin/articles/update/{id}',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Article\Update::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
@@ -163,6 +169,7 @@ final class ConfigProvider
                 'path' => '/admin/categories',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Category\Overview::class,
                 ],
                 'allowed_methods' => [ 'GET' ],
@@ -172,6 +179,7 @@ final class ConfigProvider
                 'path' => '/admin/categories/create',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Category\Create::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
@@ -181,6 +189,7 @@ final class ConfigProvider
                 'path' => '/admin/categories/delete/{id}',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Category\Delete::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
@@ -190,6 +199,7 @@ final class ConfigProvider
                 'path' => '/admin/categories/update/{id}',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Category\Update::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
@@ -201,6 +211,7 @@ final class ConfigProvider
                 'path' => '/admin/media',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Media\Overview::class,
                 ],
                 'allowed_methods' => [ 'GET' ],
@@ -210,6 +221,7 @@ final class ConfigProvider
                 'path' => '/admin/media/dialog',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Media\TinyMceDialog::class,
                 ],
                 'allowed_methods' => [ 'GET' ],
@@ -219,6 +231,7 @@ final class ConfigProvider
                 'path' => '/admin/media/create',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Media\Create::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
@@ -228,6 +241,7 @@ final class ConfigProvider
                 'path' => '/admin/media/delete/{id}',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Media\Delete::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
@@ -237,6 +251,7 @@ final class ConfigProvider
                 'path' => '/admin/media/update/{id}',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\Media\Update::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
@@ -248,6 +263,7 @@ final class ConfigProvider
                 'path' => '/admin/users',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\User\Overview::class,
                 ],
                 'allowed_methods' => [ 'GET' ],
@@ -257,6 +273,7 @@ final class ConfigProvider
                 'path' => '/admin/users/create',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\User\Create::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
@@ -266,6 +283,7 @@ final class ConfigProvider
                 'path' => '/admin/users/delete/{id}',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\User\Delete::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
@@ -275,6 +293,7 @@ final class ConfigProvider
                 'path' => '/admin/users/update/{id}',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\User\Update::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
