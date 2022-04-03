@@ -21,6 +21,7 @@ final class FindArticlesForCategoryHandler
         $qb->from(Article::class, 'a');
         $qb->join('a.lastRevision', 'r');
         $qb->where($qb->expr()->isMemberOf(':category', 'r.categories'));
+        $qb->orderBy($qb->expr()->asc('r.title'));
         $qb->setParameter('category', $query->category);
 
         return $qb->getQuery()->getResult();
