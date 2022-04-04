@@ -75,6 +75,29 @@ class User implements UserInterface
         ];
     }
 
+    public function isAdmin(): bool
+    {
+        if ($this->isOwner()) {
+            return true;
+        }
+
+        return $this->getRole() == UserRole::Admin->value;
+    }
+
+    public function isEditor(): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return $this->getRole() == UserRole::Editor->value;
+    }
+
+    public function isOwner(): bool
+    {
+        return $this->getRole() == UserRole::Owner->value;
+    }
+
     public function getDetail(string $name, $default = null)
     {
         if ($name === 'id') {

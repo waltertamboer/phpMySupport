@@ -18,6 +18,7 @@ use Support\KnowledgeBase\Domain\Article\Article;
 use Support\KnowledgeBase\Domain\Category\Category;
 use Support\KnowledgeBase\Domain\Category\CategoryName;
 use Support\KnowledgeBase\Domain\Category\CategorySlug;
+use Support\System\Application\Exception\ResourceNotFound;
 
 final class Create implements RequestHandlerInterface
 {
@@ -31,8 +32,9 @@ final class Create implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $currentUser = $request->getAttribute(UserInterface::class);
-        if ($currentUser === null) {
-            return new RedirectResponse('/admin/login');
+
+        if ($currentUser === null || !$currentUser->isOwner()) {
+            throw ResourceNotFound::fromRequest($request);
         }
 
         $formData = [

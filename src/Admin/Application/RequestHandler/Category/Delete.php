@@ -30,8 +30,9 @@ final class Delete implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute(UserInterface::class);
-        if ($user === null) {
-            return new RedirectResponse('/admin/login');
+
+        if ($user === null || !$user->isAdmin()) {
+            throw ResourceNotFound::fromRequest($request);
         }
 
         $entityId = $request->getAttribute('id');

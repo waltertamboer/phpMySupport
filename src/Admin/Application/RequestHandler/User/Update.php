@@ -28,8 +28,9 @@ final class Update implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $currentUser = $request->getAttribute(UserInterface::class);
-        if ($currentUser === null) {
-            return new RedirectResponse('/admin/login');
+
+        if ($currentUser === null || !$currentUser->isOwner()) {
+            throw ResourceNotFound::fromRequest($request);
         }
 
         $entityId = $request->getAttribute('id');

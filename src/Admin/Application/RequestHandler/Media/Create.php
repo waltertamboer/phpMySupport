@@ -19,6 +19,7 @@ use Support\KnowledgeBase\Domain\Category\Category;
 use Support\KnowledgeBase\Domain\Category\CategoryName;
 use Support\KnowledgeBase\Domain\Category\CategorySlug;
 use Support\KnowledgeBase\Domain\Media\File;
+use Support\System\Application\Exception\ResourceNotFound;
 
 final class Create implements RequestHandlerInterface
 {
@@ -31,8 +32,9 @@ final class Create implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute(UserInterface::class);
-        if ($user === null) {
-            return new RedirectResponse('/admin/login');
+
+        if ($user === null || !$user->isEditor()) {
+            throw ResourceNotFound::fromRequest($request);
         }
 
         if ($request->getMethod() === 'POST') {

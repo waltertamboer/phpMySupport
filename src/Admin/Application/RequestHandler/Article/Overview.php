@@ -6,11 +6,13 @@ namespace Support\Admin\Application\RequestHandler\Article;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Support\KnowledgeBase\Domain\Article\Article;
+use Support\System\Application\Exception\ResourceNotFound;
 
 final class Overview implements RequestHandlerInterface
 {
@@ -22,6 +24,12 @@ final class Overview implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $user = $request->getAttribute(UserInterface::class);
+
+        if ($user === null || !$user->isEditor()) {
+            throw ResourceNotFound::fromRequest($request);
+        }
+
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('a');
         $qb->from(Article::class, 'a');

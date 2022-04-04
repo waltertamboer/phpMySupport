@@ -6,12 +6,14 @@ namespace Support\Admin\Application\RequestHandler\Dashboard;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Support\Admin\Domain\PopulairArticle;
 use Support\Admin\Domain\PopulairCategory;
+use Support\System\Application\Exception\ResourceNotFound;
 
 final class View implements RequestHandlerInterface
 {
@@ -23,6 +25,12 @@ final class View implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $user = $request->getAttribute(UserInterface::class);
+
+        if ($user === null || !$user->isEditor()) {
+            throw ResourceNotFound::fromRequest($request);
+        }
+
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select([
             'COUNT(arv.id) AS views',

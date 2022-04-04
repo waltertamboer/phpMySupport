@@ -14,6 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Support\KnowledgeBase\Domain\Article\Article;
 use Support\KnowledgeBase\Domain\Category\Category;
+use Support\System\Application\Exception\ResourceNotFound;
 
 final class Create implements RequestHandlerInterface
 {
@@ -26,8 +27,9 @@ final class Create implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute(UserInterface::class);
-        if ($user === null) {
-            return new RedirectResponse('/admin/login');
+
+        if ($user === null || !$user->isEditor()) {
+            throw ResourceNotFound::fromRequest($request);
         }
 
         $categories = $this->loadCategories();

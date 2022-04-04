@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Support\Admin\Domain\Account\User;
+use Support\System\Application\Exception\ResourceNotFound;
 
 final class Overview implements RequestHandlerInterface
 {
@@ -25,8 +26,9 @@ final class Overview implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $currentUser = $request->getAttribute(UserInterface::class);
-        if ($currentUser === null) {
-            return new RedirectResponse('/admin/login');
+
+        if ($currentUser === null || !$currentUser->isOwner()) {
+            throw ResourceNotFound::fromRequest($request);
         }
 
         $qb = $this->entityManager->createQueryBuilder();
