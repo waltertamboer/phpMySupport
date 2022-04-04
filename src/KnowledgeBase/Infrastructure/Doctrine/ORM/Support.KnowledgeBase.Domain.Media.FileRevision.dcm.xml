@@ -12,7 +12,8 @@
         <field name="size" type="integer"/>
 
         <many-to-one field="file"
-                     target-entity="Support\KnowledgeBase\Domain\Media\File">
+                     target-entity="Support\KnowledgeBase\Domain\Media\File"
+                     inversed-by="revisions">
             <cascade>
                 <cascade-persist/>
             </cascade>

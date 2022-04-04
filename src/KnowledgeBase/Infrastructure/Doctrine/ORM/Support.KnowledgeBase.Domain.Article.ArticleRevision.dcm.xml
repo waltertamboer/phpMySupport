@@ -12,7 +12,8 @@
         <field name="body" type="text"/>
 
         <many-to-one field="article"
-                     target-entity="Support\KnowledgeBase\Domain\Article\Article">
+                     target-entity="Support\KnowledgeBase\Domain\Article\Article"
+                     inversed-by="revisions">
             <cascade>
                 <cascade-persist/>
             </cascade>

@@ -10,7 +10,7 @@
 
         <one-to-many field="revisions"
                      target-entity="Support\KnowledgeBase\Domain\Category\CategoryRevision"
-                     mapped-by="article">
+                     mapped-by="category">
             <cascade>
                 <cascade-persist/>
             </cascade>

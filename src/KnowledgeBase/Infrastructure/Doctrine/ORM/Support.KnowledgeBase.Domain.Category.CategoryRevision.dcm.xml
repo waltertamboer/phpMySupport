@@ -11,7 +11,8 @@
         <field name="slug" type="string"/>
 
         <many-to-one field="category"
-                     target-entity="Support\KnowledgeBase\Domain\Category\Category">
+                     target-entity="Support\KnowledgeBase\Domain\Category\Category"
+                     inversed-by="revisions">
             <cascade>
                 <cascade-persist/>
             </cascade>
