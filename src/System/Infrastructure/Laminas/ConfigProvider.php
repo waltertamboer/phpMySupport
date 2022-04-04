@@ -29,6 +29,7 @@ final class ConfigProvider
         return [
             'authentication' => $this->getAuthentication(),
             'dependencies' => $this->getDependencies(),
+            'doctrine' => $this->getDoctrine(),
             'templates' => $this->getTemplates(),
             'twig' => $this->getTwig(),
         ];
@@ -65,6 +66,17 @@ final class ConfigProvider
                 EntityManagerInterface::class => EntityManagerFactory::class,
                 PageNotFound::class => Factory\PageNotFoundFactory::class,
                 QueryBus::class => Factory\QueryBusFactory::class,
+            ],
+        ];
+    }
+
+    private function getDoctrine(): array
+    {
+        return [
+            'migrations' => [
+                'migrations_paths' => [
+                    'Support\System\Infrastructure\Doctrine\Migration' => __DIR__ . '/../Doctrine/Migration/',
+                ],
             ],
         ];
     }

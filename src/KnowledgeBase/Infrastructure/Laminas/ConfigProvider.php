@@ -63,12 +63,6 @@ final class ConfigProvider
                     __DIR__ . '/../Doctrine/ORM/',
                 ],
             ],
-            'migrations' => [
-                'migrations_paths' => [
-                    'Support\KnowledgeBase\Domain\Article\Article' => __DIR__ . '/../Doctrine/Migrations/',
-                    'Support\KnowledgeBase\Domain\Category\Category' => __DIR__ . '/../Doctrine/Migrations/',
-                ],
-            ],
         ];
     }
 
