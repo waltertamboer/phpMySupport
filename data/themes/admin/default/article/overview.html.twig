@@ -42,10 +42,12 @@
                                         <a href="{{ url('admin-article-update', {
                                             id: article.id
                                         }) }}">Edit</a>
-                                        -
-                                        <a href="{{ url('admin-article-delete', {
-                                            id: article.id
-                                        }) }}">Delete</a>
+                                        {% if authenticatedUser.role == 'admin' %}
+                                            -
+                                            <a href="{{ url('admin-article-delete', {
+                                                id: article.id
+                                            }) }}">Delete</a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

@@ -38,10 +38,12 @@
                                         <a href="{{ url('admin-media-update', {
                                             id: file.id
                                         }) }}">Edit</a>
-                                        -
-                                        <a href="{{ url('admin-media-delete', {
-                                            id: file.id
-                                        }) }}">Delete</a>
+                                        {% if authenticatedUser.role == 'admin' %}
+                                            -
+                                            <a href="{{ url('admin-media-delete', {
+                                                id: file.id
+                                            }) }}">Delete</a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

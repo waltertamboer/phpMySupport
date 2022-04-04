@@ -181,11 +181,13 @@
                                 Media
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ url('admin-user-overview') }}">
-                                Users
-                            </a>
-                        </li>
+                        {% if authenticatedUser.role == 'owner' %}
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="{{ url('admin-user-overview') }}">
+                                    Users
+                                </a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{{ url('admin-logout') }}">
                                 Logout
