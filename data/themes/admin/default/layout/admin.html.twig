@@ -181,7 +181,7 @@
                                 Media
                             </a>
                         </li>
-                        {% if authenticatedUser.role == 'owner' %}
+                        {% if authenticatedUser.isOwner %}
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="{{ url('admin-user-overview') }}">
                                     Users
