@@ -1,0 +1,35 @@
+{% extends '@admin/layout/admin.html.twig' %}
+
+{% block title %}Export / Import{% endblock %}
+
+{% block content %}
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+                <h1>Settings</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% include '@admin/settings/submenu.html.twig' %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h2>Export</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <form action="" method="post">
+                    <button type="submit" name="export" class="btn btn-primary">
+                        Export
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

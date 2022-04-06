@@ -1,0 +1,25 @@
+{% extends '@admin/layout/admin.html.twig' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+                <h1>Settings</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% include '@admin/settings/submenu.html.twig' %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                No settings available yet.
+            </div>
+        </div>
+    </div>
+{% endblock %}

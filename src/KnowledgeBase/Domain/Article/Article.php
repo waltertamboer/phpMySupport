@@ -49,9 +49,9 @@ class Article
         return $this->lastRevision;
     }
 
-    public function getRevisions(): Collection|ArticleRevisionCollection
+    public function getRevisions(): array
     {
-        return $this->revisions;
+        return $this->revisions->toArray();
     }
 
     public function getLastRevision(): ArticleRevision

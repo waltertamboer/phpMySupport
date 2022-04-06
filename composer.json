@@ -4,6 +4,7 @@
     "license": "proprietary",
     "require": {
         "php": ">=8.1",
+        "ext-dom": "*",
         "doctrine/cache": "^2.1",
         "doctrine/migrations": "^3.4",
         "doctrine/orm": "^2.11",

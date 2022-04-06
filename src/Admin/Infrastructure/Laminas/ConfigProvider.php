@@ -68,6 +68,9 @@ final class ConfigProvider
                 RequestHandler\User\Update::class => Factory\User\UpdateRequestHandlerFactory::class,
                 RequestHandler\User\Overview::class => Factory\User\OverviewRequestHandlerFactory::class,
 
+                RequestHandler\Settings\Overview::class => Factory\Settings\OverviewRequestHandlerFactory::class,
+                RequestHandler\Settings\ExportImport::class => Factory\Settings\ExportImportRequestHandlerFactory::class,
+
                 RequestHandler\Dashboard\View::class => Factory\Dashboard\ViewRequestHandlerFactory::class,
 
                 UserInterface::class => UserFactory::class,
@@ -257,7 +260,6 @@ final class ConfigProvider
                 'allowed_methods' => [ 'GET', 'POST' ],
             ],
 
-
             'admin-user-overview' => [
                 'name' => 'admin-user-overview',
                 'path' => '/admin/users',
@@ -295,6 +297,27 @@ final class ConfigProvider
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
                     \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
                     RequestHandler\User\Update::class,
+                ],
+                'allowed_methods' => [ 'GET', 'POST' ],
+            ],
+
+            'admin-settings-overview' => [
+                'name' => 'admin-settings-overview',
+                'path' => '/admin/settings',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
+                    RequestHandler\Settings\Overview::class,
+                ],
+                'allowed_methods' => [ 'GET', 'POST' ],
+            ],
+            'admin-settings-export-import' => [
+                'name' => 'admin-settings-export-import',
+                'path' => '/admin/settings/export-import',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
+                    RequestHandler\Settings\ExportImport::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
             ],
