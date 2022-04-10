@@ -82,31 +82,55 @@ final class ConfigProvider
             'home' => [
                 'name' => 'home',
                 'path' => '/',
-                'middleware' => RequestHandler\Homepage::class,
+                'middleware' => [
+                    \Support\System\Application\Middleware\SettingsMiddleware::class,
+                    RequestHandler\Homepage::class,
+                ],
+                'allowed_methods' => [ 'GET' ],
+            ],
+            'home-locale' => [
+                'name' => 'home-locale',
+                'path' => '/{locale}',
+                'middleware' => [
+                    \Support\System\Application\Middleware\SettingsMiddleware::class,
+                    RequestHandler\Homepage::class,
+                ],
                 'allowed_methods' => [ 'GET' ],
             ],
             'article' => [
                 'name' => 'article',
-                'path' => '/article/{slug}',
-                'middleware' => RequestHandler\Article::class,
+                'path' => '/{locale}/article/{slug}',
+                'middleware' => [
+                    \Support\System\Application\Middleware\SettingsMiddleware::class,
+                    RequestHandler\Article::class,
+                ],
                 'allowed_methods' => [ 'GET' ],
             ],
             'category' => [
                 'name' => 'category',
-                'path' => '/category/{slug}',
-                'middleware' => RequestHandler\Category::class,
+                'path' => '/{locale}/category/{slug}',
+                'middleware' => [
+                    \Support\System\Application\Middleware\SettingsMiddleware::class,
+                    RequestHandler\Category::class,
+                ],
                 'allowed_methods' => [ 'GET' ],
             ],
             'media-file' => [
                 'name' => 'media-file',
                 'path' => '/files/{id}',
-                'middleware' => RequestHandler\MediaFile::class,
+                'middleware' => [
+                    \Support\System\Application\Middleware\SettingsMiddleware::class,
+                    RequestHandler\MediaFile::class,
+                ],
                 'allowed_methods' => [ 'GET' ],
             ],
             'search' => [
                 'name' => 'search',
-                'path' => '/search',
-                'middleware' => RequestHandler\Search::class,
+                'path' => '/{locale}/search',
+                'middleware' => [
+                    \Support\System\Application\Middleware\SettingsMiddleware::class,
+                    RequestHandler\Search::class,
+                ],
                 'allowed_methods' => [ 'GET' ],
             ],
         ];

@@ -14,12 +14,14 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Support\Admin\Domain\PopulairArticle;
 use Support\Admin\Domain\PopulairCategory;
 use Support\System\Application\Exception\ResourceNotFound;
+use Support\System\Domain\I18n\LocaleRepository;
 
 final class View implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
+        private readonly LocaleRepository $localeRepository,
     ) {
     }
 
@@ -37,6 +39,7 @@ final class View implements RequestHandlerInterface
             'a.id',
             'lr.title',
             'lr.slug',
+            'lr.locale',
         ]);
         $qb->from(\Support\KnowledgeBase\Domain\Article\ArticleRevisionView::class, 'arv');
         $qb->join('arv.articleRevision', 'ar');
@@ -45,6 +48,7 @@ final class View implements RequestHandlerInterface
         $qb->addGroupBy('a.id');
         $qb->addGroupBy('lr.title');
         $qb->addGroupBy('lr.slug');
+        $qb->addGroupBy('lr.locale');
         $qb->orderBy($qb->expr()->desc('views'));
         $qb->setMaxResults(10);
 
@@ -56,6 +60,7 @@ final class View implements RequestHandlerInterface
             'c.id',
             'lr.name',
             'lr.slug',
+            'lr.locale',
         ]);
         $qb->from(\Support\KnowledgeBase\Domain\Category\CategoryRevisionView::class, 'crv');
         $qb->join('crv.categoryRevision', 'cr');
@@ -64,6 +69,7 @@ final class View implements RequestHandlerInterface
         $qb->addGroupBy('c.id');
         $qb->addGroupBy('lr.name');
         $qb->addGroupBy('lr.slug');
+        $qb->addGroupBy('lr.locale');
         $qb->orderBy($qb->expr()->desc('views'));
         $qb->setMaxResults(10);
 
@@ -72,19 +78,21 @@ final class View implements RequestHandlerInterface
         return new HtmlResponse($this->renderer->render(
             '@admin/dashboard/view.html.twig',
             [
-                'populairArticles' => array_map(static function (array $item): PopulairArticle {
+                'populairArticles' => array_map(function (array $item): PopulairArticle {
                     return new PopulairArticle(
                         $item['id'],
                         $item['title'],
                         $item['slug'],
+                        $this->localeRepository->lookup($item['locale']),
                         $item['views'],
                     );
                 }, $populairArticles),
-                'populairCategories' => array_map(static function (array $item): PopulairCategory {
+                'populairCategories' => array_map(function (array $item): PopulairCategory {
                     return new PopulairCategory(
                         $item['id'],
                         $item['name'],
                         $item['slug'],
+                        $this->localeRepository->lookup($item['locale']),
                         $item['views'],
                     );
                 }, $populairCategories),

@@ -22,6 +22,7 @@ class Category
 
     public function __construct(
         User $createdBy,
+        string $locale,
         string $name,
         string $slug,
     ) {
@@ -31,7 +32,7 @@ class Category
         $this->revisions = new ArrayCollection();
         $this->articles = new ArrayCollection();
 
-        $this->createRevision($createdBy, $name, $slug);
+        $this->createRevision($createdBy, $locale, $name, $slug);
     }
 
     public function getId(): UuidInterface
@@ -49,9 +50,9 @@ class Category
         return $this->createdBy;
     }
 
-    public function createRevision(User $createdBy, string $name, string $slug): CategoryRevision
+    public function createRevision(User $createdBy, string $locale, string $name, string $slug): CategoryRevision
     {
-        $this->lastRevision = new CategoryRevision($createdBy, $this, $name, $slug);
+        $this->lastRevision = new CategoryRevision($createdBy, $this, $locale, $name, $slug);
 
         $this->revisions->add($this->lastRevision);
 

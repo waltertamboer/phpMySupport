@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Support\Admin\Application\RequestHandler\Category\Update;
+use Support\System\Domain\I18n\LocaleRepository;
 
 final class UpdateRequestHandlerFactory
 {
@@ -16,6 +17,7 @@ final class UpdateRequestHandlerFactory
         return new Update(
             $container->get(TemplateRendererInterface::class),
             $container->get(EntityManagerInterface::class),
+            $container->get(LocaleRepository::class),
         );
     }
 }

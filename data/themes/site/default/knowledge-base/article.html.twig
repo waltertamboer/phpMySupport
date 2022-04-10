@@ -1,5 +1,7 @@
 {% extends '@site/layout/default.html.twig' %}
 
+{% set locale = article.lastRevision.locale %}
+
 {% block title %}{{ article.lastRevision.title }} - {{ siteTitle() }}{% endblock %}
 
 {% block content %}

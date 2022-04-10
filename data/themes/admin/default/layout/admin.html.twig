@@ -10,37 +10,11 @@
               rel="stylesheet"
               integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
               crossorigin="anonymous">
+        {% block head_links %}{% endblock %}
 
         <title>{% block title %}{% endblock %} - {{ siteTitle() }}</title>
 
-        <style>
-            body {
-                background-color: #f1f1f1;
-            }
-
-            a {
-                color: #333;
-                text-decoration: none;
-            }
-
-            .navbar {
-                margin-bottom: 1rem;
-            }
-
-            .nav .nav-item:first-child .nav-link {
-                padding-left: 0;
-            }
-
-            h1 {
-                font-size: 2rem;
-                margin-bottom: 1.25rem;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-                margin-bottom: 1.25rem;
-            }
-        </style>
+        {% include '@admin/layout/admin-css.html.twig' %}
 
         <script>
             function slugify(str, separator = '-') {
@@ -146,6 +120,119 @@
                     });
                 });
             }
+
+            function lookupAutocomplete(config, query) {
+                if (query === '') {
+                    config.resultList.remove();
+                    return;
+                }
+
+                if (config.data.src instanceof Function) {
+                    config.data.src(query).then(function (data) {
+                        buildAutocompleteResultList(config, data);
+                    });
+                }
+            }
+
+            function buildAutocompleteResultList(config, items) {
+                if (config.resultList) {
+                    config.resultList.remove();
+                }
+
+                config.resultList = document.createElement('div');
+                config.resultList.classList.add('autocomplete-result-list');
+                config.stubInput.parentNode.insertBefore(config.resultList, config.stubInput.nextSibling);
+
+                var countLabel = document.createElement('div');
+                countLabel.classList.add('autocomplete-result-list-count');
+                if (items.length === 1) {
+                    countLabel.innerHTML = 'Found <span>1</span> matching item';
+                } else {
+                    countLabel.innerHTML = 'Found <span>' + items.length + '</span> matching items';
+                }
+                config.resultList.append(countLabel);
+
+                var listContainerElement = document.createElement('div');
+                listContainerElement.classList.add('autocomplete-result-list-container');
+                config.resultList.append(listContainerElement);
+
+                var listElement = document.createElement('ul');
+                listContainerElement.append(listElement);
+
+                for (var i = 0; i < items.length; ++i) {
+                    var value = items[i][config.data.valueKey];
+                    var label = items[i][config.data.labelKey];
+
+                    var listItemElement = document.createElement('li');
+                    listItemElement.setAttribute('data-value', value);
+                    listItemElement.setAttribute('data-label', label);
+                    listItemElement.append(document.createTextNode(label));
+                    listItemElement.addEventListener('click', function () {
+                        config.element.value = this.getAttribute('data-value');
+                        config.stubInput.value = this.getAttribute('data-label');
+                        config.resultList.remove();
+                    });
+                    listElement.append(listItemElement);
+                }
+            }
+
+            function initializeAutocomplete(config) {
+                config.element = null;
+
+                if (config.selector instanceof HTMLElement) {
+                    config.element = config.selector;
+                } else {
+                    throw new Error('No valid selector provided for autocomplete. ');
+                }
+
+                var id = config.element.getAttribute('id');
+                var name = config.element.getAttribute('name');
+                var label = config.element.getAttribute('data-autocomplete-label');
+
+                config.element.removeAttribute('id');
+                config.element.setAttribute('type', 'hidden');
+
+                config.stubInput = document.createElement('input');
+                config.stubInput.setAttribute('id', id);
+                config.stubInput.setAttribute('name', name + 'Stub');
+                config.stubInput.setAttribute('type', 'text');
+                config.stubInput.setAttribute('class', 'form-control');
+                config.stubInput.setAttribute('autocomplete', 'off');
+                config.stubInput.setAttribute('value', label);
+                config.stubInput.addEventListener('keyup', function () {
+                    lookupAutocomplete(config, this.value);
+                });
+                config.stubInput.addEventListener('blur', function () {
+                    console.log(config);
+                });
+                config.stubInput.addEventListener('focus', function () {
+                });
+                config.element.parentNode.insertBefore(config.stubInput, config.element.nextSibling);
+            }
+
+            window.addEventListener('load', function () {
+                var elements = document.querySelectorAll('[data-autocomplete]');
+                var url = null;
+
+                for (var i = 0; i < elements.length; ++i) {
+                    url = elements[i].getAttribute('data-autocomplete');
+
+                    initializeAutocomplete({
+                        selector: elements[i],
+                        data: {
+                            src: async (query) => {
+                                console.log('query: ' + query);
+                                const sourceUrl = url.replace('{query}', query);
+                                const source = await fetch(sourceUrl);
+
+                                return await source.json();
+                            },
+                            valueKey: 'id',
+                            labelKey: 'name'
+                        }
+                    });
+                }
+            });
         </script>
 
         {% block head_scripts %}{% endblock %}
@@ -167,32 +254,42 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ url('admin-article-overview') }}">
+                            <a class="nav-link" aria-current="page" href="{{ url('admin-dashboard') }}">
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{{ url('admin-article-overview') }}">
                                 Articles
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ url('admin-category-overview') }}">
+                            <a class="nav-link" aria-current="page" href="{{ url('admin-category-overview') }}">
                                 Categories
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ url('admin-media-overview') }}">
+                            <a class="nav-link" aria-current="page" href="{{ url('admin-media-overview') }}">
                                 Media
                             </a>
                         </li>
                         {% if authenticatedUser.isOwner %}
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{{ url('admin-user-overview') }}">
+                                <a class="nav-link" aria-current="page" href="{{ url('admin-user-overview') }}">
                                     Users
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{{ url('admin-settings-overview') }}">
+                                <a class="nav-link" aria-current="page" href="{{ url('admin-settings-overview') }}">
                                     Settings
                                 </a>
                             </li>
                         {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{{ url('home') }}">
+                                Site
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{{ url('admin-logout') }}">
                                 Logout

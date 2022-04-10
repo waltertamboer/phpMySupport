@@ -22,6 +22,7 @@ class ArticleRevision
     public function __construct(
         private Article $article,
         private User $createdBy,
+        private string $locale,
         private string $title,
         private string $slug,
         private string $body,
@@ -49,6 +50,11 @@ class ArticleRevision
     public function getArticle(): Article
     {
         return $this->article;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
     }
 
     public function getTitle(): string

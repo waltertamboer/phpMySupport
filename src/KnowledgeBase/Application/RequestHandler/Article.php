@@ -27,7 +27,9 @@ final class Article implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $routeLocale = $request->getAttribute('locale');
         $routeSlug = $request->getAttribute('slug');
+
         $article = $this->queryBus->query(new FindArticleBySlug($routeSlug));
         assert($article === null || $article instanceof DomainArticle);
 
@@ -37,11 +39,14 @@ final class Article implements RequestHandlerInterface
 
         $this->commandBus->dispatch(new RegisterArticleView($article, $request));
 
-        return new HtmlResponse($this->renderer->render(
+        $response = new HtmlResponse($this->renderer->render(
             '@site/knowledge-base/article.html.twig',
             [
+                'locale' => $routeLocale,
                 'article' => $article,
             ]
         ));
+
+        return $response->withAddedHeader('Content-Language', $article->getLastRevision()->getLocale());
     }
 }

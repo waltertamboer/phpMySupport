@@ -15,12 +15,15 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Support\KnowledgeBase\Domain\Article\Article;
 use Support\KnowledgeBase\Domain\Category\Category;
 use Support\System\Application\Exception\ResourceNotFound;
+use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\SettingManager;
 
 final class Update implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
+        private readonly LocaleRepository $localeRepository,
     ) {
     }
 
@@ -39,11 +42,12 @@ final class Update implements RequestHandlerInterface
             throw ResourceNotFound::fromRequest($request);
         }
 
-        $categories = $this->loadCategories([]);
+        $categories = $this->loadCategories();
 
         $formData = [
             'title' => $entity->getLastRevision()->getTitle(),
             'slug' => $entity->getLastRevision()->getSlug(),
+            'locale' => $this->localeRepository->lookup($entity->getLastRevision()->getLocale()),
             'categories' => array_map(static function (Category $category): string {
                 return $category->getId()->toString();
             }, $entity->getLastRevision()->getCategories()),
@@ -67,6 +71,10 @@ final class Update implements RequestHandlerInterface
             $formSlug = $formData['slug'] ?? '';
             $formBody = $formData['body'] ?? '';
 
+            $formLocale = $formData['locale'] ?? 'en';
+            $formLocale = $this->localeRepository->lookup($formLocale);
+            $formData['locale'] = $formLocale;
+
             if ($formTitle === '') {
                 $error = true;
                 $errorMsg = 'No title provided.';
@@ -79,11 +87,20 @@ final class Update implements RequestHandlerInterface
             } elseif ($formSlug !== $entity->getLastRevision()->getSlug() && $this->hasExistingSlug($formSlug)) {
                 $error = true;
                 $errorMsg = 'The slug already exists.';
+            } elseif ($formLocale === '') {
+                $error = true;
+                $errorMsg = 'No locale provided.';
             } elseif ($formBody === '') {
                 $error = true;
                 $errorMsg = 'No body provided.';
             } else {
-                $entityRevision = $entity->createRevision($user, $formTitle, $formSlug, $formBody);
+                $entityRevision = $entity->createRevision(
+                    $user,
+                    $formLocale->getId(),
+                    $formTitle,
+                    $formSlug,
+                    $formBody
+                );
 
                 foreach ($selectedCategories as $category) {
                     $category = $this->entityManager->find(Category::class, $category);

@@ -16,6 +16,6 @@ final class GetCategoryOverviewHandler
 
     public function __invoke(GetCategoryOverview $query): CategoryOverviewCollection
     {
-        return $this->repository->queryCategoryOverview();
+        return $this->repository->queryCategoryOverview($query->getLocale());
     }
 }

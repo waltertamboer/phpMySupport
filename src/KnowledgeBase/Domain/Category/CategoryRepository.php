@@ -6,8 +6,12 @@ namespace Support\KnowledgeBase\Domain\Category;
 
 interface CategoryRepository
 {
-    public function findCategoryBySlug(CategorySlug $slug): ?Category;
-    public function queryCategoryOverview(): CategoryOverviewCollection;
+    public function findCategoryBySlug(
+        CategoryLocale $locale,
+        CategorySlug $slug,
+    ): ?Category;
+
+    public function queryCategoryOverview(string $locale): CategoryOverviewCollection;
     public function save(Category $category): void;
 
 }

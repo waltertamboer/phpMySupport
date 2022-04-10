@@ -23,6 +23,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Title</th>
+                                <th>Locale</th>
                                 <th class="text-end">Views</th>
                             </tr>
                         </thead>
@@ -33,6 +34,7 @@
                                 <tr>
                                     <td>
                                         <a href="{{ url('article', {
+                                            locale: populairArticle.articleLocale.id,
                                             slug: populairArticle.articleSlug
                                         }) }}">
                                             {{ counter }}
@@ -40,13 +42,23 @@
                                     </td>
                                     <td>
                                         <a href="{{ url('article', {
+                                            locale: populairArticle.articleLocale.id,
                                             slug: populairArticle.articleSlug
                                         }) }}">
                                             {{ populairArticle.articleTitle }}
                                         </a>
                                     </td>
+                                    <td>
+                                        <a href="{{ url('article', {
+                                            locale: populairArticle.articleLocale.id,
+                                            slug: populairArticle.articleSlug
+                                        }) }}">
+                                            {{ populairArticle.articleLocale.name }}
+                                        </a>
+                                    </td>
                                     <td class="text-end">
                                         <a href="{{ url('article', {
+                                            locale: populairArticle.articleLocale.id,
                                             slug: populairArticle.articleSlug
                                         }) }}">
                                             {{ populairArticle.views }}
@@ -69,6 +81,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Title</th>
+                                <th>Locale</th>
                                 <th class="text-end">Views</th>
                             </tr>
                         </thead>
@@ -79,6 +92,7 @@
                                 <tr>
                                     <td>
                                         <a href="{{ url('category', {
+                                            locale: populairCategory.categoryLocale.id,
                                             slug: populairCategory.categorySlug
                                         }) }}">
                                             {{ counter }}
@@ -86,13 +100,23 @@
                                     </td>
                                     <td>
                                         <a href="{{ url('category', {
+                                            locale: populairCategory.categoryLocale.id,
                                             slug: populairCategory.categorySlug
                                         }) }}">
                                             {{ populairCategory.categoryName }}
                                         </a>
                                     </td>
+                                    <td>
+                                        <a href="{{ url('category', {
+                                            locale: populairCategory.categoryLocale.id,
+                                            slug: populairCategory.categorySlug
+                                        }) }}">
+                                            {{ populairCategory.categoryLocale.name }}
+                                        </a>
+                                    </td>
                                     <td class="text-end">
                                         <a href="{{ url('category', {
+                                            locale: populairCategory.categoryLocale.id,
                                             slug: populairCategory.categorySlug
                                         }) }}">
                                             {{ populairCategory.views }}

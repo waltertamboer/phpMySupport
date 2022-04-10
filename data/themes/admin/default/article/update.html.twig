@@ -48,6 +48,18 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="locale" class="form-label">Locale</label>
+                        <input type="text"
+                               name="locale"
+                               id="locale"
+                               class="form-control"
+                               autocomplete="off"
+                               data-autocomplete="{{ url('admin-autocomplete-locales') }}?q={query}"
+                               data-autocomplete-label="{{ formData.locale.name }}"
+                               value="{{ formData.locale.id }}">
+                    </div>
+
+                    <div class="mb-3">
                         <label for="category" class="form-label">Category</label>
                         <div id="category-container">
                             {% for selectedCategory in formData.categories %}

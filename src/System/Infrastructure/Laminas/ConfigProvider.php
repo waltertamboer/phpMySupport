@@ -10,10 +10,14 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\Session\PhpSession;
 use Mezzio\Authentication\UserRepositoryInterface;
 use Mezzio\Container\ApplicationConfigInjectionDelegator;
+use Support\System\Application\Middleware\LocalizationMiddleware;
 use Support\System\Application\Middleware\PageNotFound;
+use Support\System\Application\Middleware\SettingsMiddleware;
 use Support\System\Domain\ApplicationConfig;
 use Support\System\Domain\Bus\Command\CommandBus;
 use Support\System\Domain\Bus\Query\QueryBus;
+use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\SettingManager;
 use Support\System\Infrastructure\Doctrine\ORM\EntityManagerFactory;
 use Support\System\Infrastructure\Doctrine\ORM\MezzioAuthenticationUserRepository;
 use Support\System\Infrastructure\Doctrine\ORM\MezzioAuthenticationUserRepositoryFactory;
@@ -21,6 +25,7 @@ use Support\System\Infrastructure\Factory;
 use Support\System\Infrastructure\Twig\ApplicationRuntime;
 use Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware;
 use Twig\Environment;
+use Twig\Extra\Intl\IntlExtension;
 
 final class ConfigProvider
 {
@@ -59,13 +64,17 @@ final class ConfigProvider
             ],
             'factories' => [
                 ApplicationConfig::class => Factory\ApplicationConfigFactory::class,
+                ApplicationRuntime::class => Factory\ApplicationRuntimeFactory::class,
                 CommandBus::class => Factory\CommandBusFactory::class,
                 DefaultTemplateParamsMiddleware::class => Factory\DefaultTemplateParamsMiddlewareFactory::class,
-                MezzioAuthenticationUserRepository::class => MezzioAuthenticationUserRepositoryFactory::class,
-                ApplicationRuntime::class => Factory\ApplicationRuntimeFactory::class,
                 EntityManagerInterface::class => EntityManagerFactory::class,
+                LocalizationMiddleware::class => Factory\LocalizationMiddlewareFactory::class,
+                MezzioAuthenticationUserRepository::class => MezzioAuthenticationUserRepositoryFactory::class,
                 PageNotFound::class => Factory\PageNotFoundFactory::class,
                 QueryBus::class => Factory\QueryBusFactory::class,
+                SettingManager::class => Factory\SettingManagerFactory::class,
+                SettingsMiddleware::class => Factory\SettingsMiddlewareFactory::class,
+                LocaleRepository::class => Factory\LocaleRepositoryFactory::class,
             ],
         ];
     }
@@ -76,6 +85,12 @@ final class ConfigProvider
             'migrations' => [
                 'migrations_paths' => [
                     'Support\System\Infrastructure\Doctrine\Migration' => __DIR__ . '/../Doctrine/Migration/',
+                ],
+            ],
+            'metadata' => [
+                'type' => 'xml',
+                'paths' => [
+                    __DIR__ . '/../Doctrine/ORM/',
                 ],
             ],
         ];
@@ -98,6 +113,7 @@ final class ConfigProvider
             'assets_version' => 'v1',
             'extensions' => [
                 ApplicationRuntime::class,
+                new IntlExtension(),
             ],
             'globals' => [],
             'optimizations' => -1, // -1: Enable all (default), 0: disable optimizations

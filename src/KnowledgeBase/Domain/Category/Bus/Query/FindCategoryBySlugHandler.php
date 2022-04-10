@@ -19,6 +19,6 @@ final class FindCategoryBySlugHandler
 
     public function __invoke(FindCategoryBySlug $query): ?Category
     {
-        return $this->repository->findCategoryBySlug($query->slug);
+        return $this->repository->findCategoryBySlug($query->locale, $query->slug);
     }
 }

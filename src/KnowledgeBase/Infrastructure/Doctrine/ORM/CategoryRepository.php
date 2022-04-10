@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityRepository;
 use Support\KnowledgeBase\Domain\Article\Article;
 use Support\KnowledgeBase\Domain\Category\Category;
 use Support\KnowledgeBase\Domain\Category\CategoryCollection;
+use Support\KnowledgeBase\Domain\Category\CategoryLocale;
 use Support\KnowledgeBase\Domain\Category\CategoryOverviewCollection;
 use Support\KnowledgeBase\Domain\Category\CategoryOverviewItem;
 use Support\KnowledgeBase\Domain\Category\CategoryRepository as BaseCategoryRepository;
@@ -24,26 +25,32 @@ final class CategoryRepository implements BaseCategoryRepository
         $this->entityRepository = $this->entityManager->getRepository(Category::class);
     }
 
-    public function findCategoryBySlug(CategorySlug $slug): ?Category
-    {
+    public function findCategoryBySlug(
+        CategoryLocale $locale,
+        CategorySlug $slug,
+    ): ?Category {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('c');
         $qb->from(Category::class, 'c');
         $qb->join('c.lastRevision', 'r');
-        $qb->where($qb->expr()->eq('r.slug', ':slug'));
+        $qb->where($qb->expr()->eq('r.locale', ':locale'));
+        $qb->andWhere($qb->expr()->eq('r.slug', ':slug'));
+        $qb->setParameter('locale', $locale->value());
         $qb->setParameter('slug', $slug->value());
         $qb->setMaxResults(1);
 
         return $qb->getQuery()->getOneOrNullResult();
     }
 
-    public function queryCategoryOverview(): CategoryOverviewCollection
+    public function queryCategoryOverview(string $locale): CategoryOverviewCollection
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('c');
         $qb->from(Category::class, 'c');
         $qb->join('c.lastRevision', 'r');
+        $qb->where($qb->expr()->eq('r.locale', ':locale'));
         $qb->orderBy($qb->expr()->asc('r.name'));
+        $qb->setParameter('locale', $locale);
 
         $categories = $qb->getQuery()->getResult();
 

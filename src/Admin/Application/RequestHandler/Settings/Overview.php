@@ -14,12 +14,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Support\Admin\Domain\Account\User;
 use Support\System\Application\Exception\ResourceNotFound;
+use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\Setting;
 
 final class Overview implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
+        private readonly LocaleRepository $localeRepository,
     ) {
     }
 
@@ -31,9 +34,68 @@ final class Overview implements RequestHandlerInterface
             throw ResourceNotFound::fromRequest($request);
         }
 
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('s');
+        $qb->from(Setting::class, 's');
+
+        $settingRowset = $qb->getQuery()->getResult();
+
+        $settings = [];
+        $formData = [];
+        foreach ($settingRowset as $setting) {
+            assert($setting instanceof Setting);
+
+            $settings[$setting->getName()] = $setting;
+            $formData[$setting->getName()] = $setting->getValue();
+        }
+
+        if (array_key_exists('defaultLocale', $formData)) {
+            $defaultLocale = $this->localeRepository->lookup($formData['defaultLocale']);
+
+            $formData['defaultLocaleValue'] = '';
+            if ($defaultLocale !== null) {
+                $formData['defaultLocaleValue'] = $defaultLocale->getName();
+            }
+        }
+
+        $error = false;
+        $errorMsg = null;
+
+        if ($request->getMethod() === 'POST') {
+            $formData = $request->getParsedBody();
+
+            $checkboxes = [
+                'searchEnabled',
+            ];
+
+            foreach ($formData as $formName => $formValue) {
+                if (!array_key_exists($formName, $settings)) {
+                    continue;
+                }
+
+                $settings[$formName]->setValue($formValue);
+            }
+
+            foreach ($checkboxes as $formName) {
+                if (!array_key_exists($formName, $settings)) {
+                }
+
+                if (!array_key_exists($formName, $formData)) {
+                    $settings[$formName]->setValue('0');
+                }
+            }
+
+            $this->entityManager->flush();
+
+            return new RedirectResponse('/admin/settings');
+        }
+
         return new HtmlResponse($this->renderer->render(
             '@admin/settings/overview.html.twig',
             [
+                'formData' => $formData,
+                'error' => $error,
+                'errorMsg' => $errorMsg,
             ],
         ));
     }

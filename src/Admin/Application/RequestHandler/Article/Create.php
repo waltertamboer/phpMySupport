@@ -15,12 +15,16 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Support\KnowledgeBase\Domain\Article\Article;
 use Support\KnowledgeBase\Domain\Category\Category;
 use Support\System\Application\Exception\ResourceNotFound;
+use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\SettingManager;
 
 final class Create implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
+        private readonly LocaleRepository $localeRepository,
+        private readonly SettingManager $settingManager,
     ) {
     }
 
@@ -34,9 +38,12 @@ final class Create implements RequestHandlerInterface
 
         $categories = $this->loadCategories();
 
+        $defaultLocale = $this->localeRepository->lookup($this->settingManager->get('defaultLocale', 'en_US'));
+
         $formData = [
             'title' => '',
             'slug' => '',
+            'locale' => $defaultLocale,
             'categories' => [''],
             'body' => '',
         ];
@@ -57,6 +64,10 @@ final class Create implements RequestHandlerInterface
             $formSlug = $formData['slug'] ?? '';
             $formBody = $formData['body'] ?? '';
 
+            $formLocale = $formData['locale'] ?? 'en';
+            $formLocale = $this->localeRepository->lookup($formLocale);
+            $formData['locale'] = $formLocale;
+
             if ($formTitle === '') {
                 $error = true;
                 $errorMsg = 'No title provided.';
@@ -69,11 +80,20 @@ final class Create implements RequestHandlerInterface
             } elseif ($this->hasExistingSlug($formSlug)) {
                 $error = true;
                 $errorMsg = 'The slug already exists.';
+            } elseif ($formLocale === '') {
+                $error = true;
+                $errorMsg = 'No locale provided.';
             } elseif ($formBody === '') {
                 $error = true;
                 $errorMsg = 'No body provided.';
             } else {
-                $article = new Article($user, $formTitle, $formSlug, $formBody);
+                $article = new Article(
+                    $user,
+                    $formLocale->getId(),
+                    $formTitle,
+                    $formSlug,
+                    $formBody
+                );
 
                 foreach ($selectedCategories as $category) {
                     $category = $this->entityManager->find(Category::class, $category);

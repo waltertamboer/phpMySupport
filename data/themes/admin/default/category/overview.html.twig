@@ -23,6 +23,8 @@
                         <thead>
                             <tr>
                                 <th>Title</th>
+                                <th>Slug</th>
+                                <th>Locale</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -34,8 +36,19 @@
                                             id: category.id
                                         }) }}">{{ category.lastRevision.name }}</a>
                                     </td>
+                                    <td>
+                                        <a href="{{ url('admin-category-update', {
+                                            id: category.id
+                                        }) }}">{{ category.lastRevision.slug }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url('admin-category-update', {
+                                            id: category.id
+                                        }) }}">{{ category.lastRevision.locale.name }}</a>
+                                    </td>
                                     <td class="text-end">
                                         <a href="{{ url('category', {
+                                            locale: category.lastRevision.locale.id,
                                             slug: category.lastRevision.slug
                                         }) }}">View</a>
                                         -

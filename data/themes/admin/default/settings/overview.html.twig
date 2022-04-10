@@ -18,7 +18,83 @@
 
         <div class="row">
             <div class="col">
-                No settings available yet.
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ errorMsg }}
+                    </div>
+                {% endif %}
+
+                <form action="" method="post">
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" name="title" id="title" class="form-control" value="{{ formData.title }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="basePath" class="form-label">Base path</label>
+                        <input type="text" name="basePath" id="basePath" class="form-control" value="{{ formData.basePath }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="homepage" class="form-label">Homepage</label>
+                        <input type="text" name="homepage" id="homepage" class="form-control" value="{{ formData.homepage }}">
+                    </div>
+
+                    <h2 class="mt-4">Search</h2>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="1" id="searchEnabled" name="searchEnabled"{% if formData.searchEnabled == '1' %} checked{% endif %}>
+                        <label class="form-check-label" for="searchEnabled">
+                            Search enabled
+                        </label>
+                    </div>
+
+                    <h2 class="mt-4">Theming</h2>
+
+                    <div class="mb-3">
+                        <label for="theme" class="form-label">Theme</label>
+                        <input type="text" name="theme" id="theme" class="form-control" value="{{ formData.theme }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="themeAdmin" class="form-label">Admin theme</label>
+                        <input type="text" name="themeAdmin" id="themeAdmin" class="form-control" value="{{ formData.themeAdmin }}">
+                    </div>
+
+                    <h2 class="mt-4">Localization</h2>
+
+                    <div class="mb-3">
+                        <label for="defaultLocale" class="form-label">Default locale</label>
+                        <input type="text"
+                               name="defaultLocale"
+                               id="defaultLocale"
+                               class="form-control"
+                               autocomplete="off"
+                               data-autocomplete="{{ url('admin-autocomplete-locales') }}?q={query}"
+                               data-autocomplete-label="{{ formData.defaultLocaleValue }}"
+                               value="{{ formData.defaultLocale }}">
+                    </div>
+
+                    <h2 class="mt-4">TinyMCE</h2>
+
+                    <div class="mb-3">
+                        <label for="tinyMceApiKey" class="form-label">TinyMce API Key</label>
+                        <input type="text" name="tinyMceApiKey" id="tinyMceApiKey" class="form-control" value="{{ formData.tinyMceApiKey }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tinyMceConfig" class="form-label">TinyMce Config</label>
+                        <textarea class="form-control" name="tinyMceConfig" id="tinyMceConfig" style="height: 300px;">{{ formData.tinyMceConfig }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">
+                            Save
+                        </button>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>

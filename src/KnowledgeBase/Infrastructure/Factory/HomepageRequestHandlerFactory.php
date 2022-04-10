@@ -8,6 +8,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Support\KnowledgeBase\Application\RequestHandler\Homepage;
 use Support\System\Domain\Bus\Query\QueryBus;
+use Support\System\Domain\SettingManager;
 
 final class HomepageRequestHandlerFactory
 {
@@ -16,6 +17,7 @@ final class HomepageRequestHandlerFactory
         return new Homepage(
             $container->get(TemplateRendererInterface::class),
             $container->get(QueryBus::class),
+            $container->get(SettingManager::class),
         );
     }
 }

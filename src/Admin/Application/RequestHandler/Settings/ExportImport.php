@@ -187,6 +187,7 @@ final class ExportImport implements RequestHandlerInterface
                 $this->xmlAppendUserValue($revisionElement, 'createdBy', $revision->getCreatedBy());
                 $this->xmlAppendStringValue($revisionElement, 'name', $revision->getName());
                 $this->xmlAppendStringValue($revisionElement, 'slug', $revision->getSlug());
+                $this->xmlAppendStringValue($revisionElement, 'locale', $revision->getLocale());
                 $this->xmlAppendMediaFileValue($revisionElement, 'thumbnail', $revision->getThumbnail());
             }
         }
@@ -233,6 +234,7 @@ final class ExportImport implements RequestHandlerInterface
                 $this->xmlAppendUserValue($revisionElement, 'createdBy', $revision->getCreatedBy());
                 $this->xmlAppendStringValue($revisionElement, 'title', $revision->getTitle());
                 $this->xmlAppendStringValue($revisionElement, 'slug', $revision->getSlug());
+                $this->xmlAppendStringValue($revisionElement, 'locale', $revision->getLocale());
                 $this->xmlAppendStringValue($revisionElement, 'body', $revision->getBody());
             }
         }

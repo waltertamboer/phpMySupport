@@ -6,7 +6,13 @@ namespace Support\KnowledgeBase\Domain\Category\Bus\Query;
 
 final class GetCategoryOverview
 {
-    public function __construct()
+    public function __construct(
+        private readonly string $locale,
+    ) {
+    }
+
+    public function getLocale(): string
     {
+        return $this->locale;
     }
 }

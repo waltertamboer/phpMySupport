@@ -13,12 +13,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Support\KnowledgeBase\Domain\Article\Article;
 use Support\System\Application\Exception\ResourceNotFound;
+use Support\System\Domain\I18n\LocaleRepository;
 
 final class Overview implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
+        private readonly LocaleRepository $localeRepository,
     ) {
     }
 
@@ -41,7 +43,17 @@ final class Overview implements RequestHandlerInterface
         return new HtmlResponse($this->renderer->render(
             '@admin/article/overview.html.twig',
             [
-                'articles' => $articles,
+                'articles' => array_map(function (Article $article): array {
+                    return [
+                        'id' => $article->getId()->toString(),
+                        'lastRevision' => [
+                            'id' => $article->getLastRevision()->getId()->toString(),
+                            'title' => $article->getLastRevision()->getTitle(),
+                            'slug' => $article->getLastRevision()->getSlug(),
+                            'locale' => $this->localeRepository->lookup($article->getLastRevision()->getLocale()),
+                        ],
+                    ];
+                }, $articles),
             ],
         ));
     }

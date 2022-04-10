@@ -3,35 +3,39 @@
 {% block title %}{{ siteTitle() }}{% endblock %}
 
 {% block content %}
-    <section class="homepage-search-box">
-        <div class="container-sm">
-            <div class="row">
-                <div class="col">
-                    <h1>How can we help you?</h1>
+    {% if searchEnabled() %}
+        <section class="homepage-search-box">
+            <div class="container-sm">
+                <div class="row">
+                    <div class="col">
+                        <h1>How can we help you?</h1>
 
-                    <form action="{{ url('search') }}"
-                          method="GET"
-                          autocomplete="off"
-                          class="d-inline-block">
-                        <div class="input-group d-flex">
-                            <input type="text"
-                                   name="q"
-                                   title="search-query"
-                                   class="search-query flex-grow-1"
-                                   placeholder="Search the knowledge base"
-                                   aria-labelledby="Search the knowledge base"
-                                   value="">
+                        <form action="{{ url('search', {
+                            locale: locale
+                        }) }}"
+                              method="GET"
+                              autocomplete="off"
+                              class="d-inline-block">
+                            <div class="input-group d-flex">
+                                <input type="text"
+                                       name="q"
+                                       title="search-query"
+                                       class="search-query flex-grow-1"
+                                       placeholder="Search the knowledge base"
+                                       aria-labelledby="Search the knowledge base"
+                                       value="">
 
-                            <button type="submit" aria-labelledby="Search">
-                                <i class="icon-search lp"></i>
-                                <span>Search</span>
-                            </button>
-                        </div>
-                    </form>
+                                <button type="submit" aria-labelledby="Search">
+                                    <i class="icon-search lp"></i>
+                                    <span>Search</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    {% endif %}
 
     {% if categories | length == 0 %}
         <section class="mt-4">
@@ -53,6 +57,7 @@
                         <div class="col-3">
                             <section class="category-box mb-4">
                                 <a href="{{ url('category', {
+                                    'locale': item.category.lastRevision.locale,
                                     'slug': item.category.lastRevision.slug
                                 }) }}">
                                     <div class="category-box-logo">

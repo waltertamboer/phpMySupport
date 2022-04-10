@@ -23,6 +23,8 @@
                         <thead>
                             <tr>
                                 <th>Title</th>
+                                <th>Slug</th>
+                                <th>Locale</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -34,8 +36,19 @@
                                             id: article.id
                                         }) }}">{{ article.lastRevision.title }}</a>
                                     </td>
+                                    <td>
+                                        <a href="{{ url('admin-article-update', {
+                                            id: article.id
+                                        }) }}">{{ article.lastRevision.slug }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url('admin-article-update', {
+                                            id: article.id
+                                        }) }}">{{ article.lastRevision.locale.name }}</a>
+                                    </td>
                                     <td class="text-end">
                                         <a href="{{ url('article', {
+                                            locale: article.lastRevision.locale.id,
                                             slug: article.lastRevision.slug
                                         }) }}">View</a>
                                         -

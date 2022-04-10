@@ -14,6 +14,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Support\KnowledgeBase\Domain\Article\Article;
 use Support\KnowledgeBase\Domain\Category\Category;
 use Support\System\Application\Exception\ResourceNotFound;
+use Support\System\Domain\I18n\LocaleRepository;
 use Support\System\Domain\Value\AnsiString;
 
 final class Overview implements RequestHandlerInterface
@@ -21,6 +22,7 @@ final class Overview implements RequestHandlerInterface
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
+        private readonly LocaleRepository $localeRepository,
     ) {
     }
 
@@ -43,7 +45,17 @@ final class Overview implements RequestHandlerInterface
         return new HtmlResponse($this->renderer->render(
             '@admin/category/overview.html.twig',
             [
-                'categories' => $categories,
+                'categories' => array_map(function (Category $category): array {
+                    return [
+                        'id' => $category->getId()->toString(),
+                        'lastRevision' => [
+                            'id' => $category->getLastRevision()->getId(),
+                            'name' => $category->getLastRevision()->getName(),
+                            'slug' => $category->getLastRevision()->getSlug(),
+                            'locale' => $this->localeRepository->lookup($category->getLastRevision()->getLocale()),
+                        ],
+                    ];
+                }, $categories),
             ],
         ));
     }

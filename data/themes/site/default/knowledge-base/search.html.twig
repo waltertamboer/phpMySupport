@@ -24,6 +24,7 @@
                             <section class="search-result-item">
                                 <h2>
                                     <a href="{{ url('article', {
+                                        locale: article.lastRevision.locale,
                                         slug: article.lastRevision.slug
                                     }) }}">
                                         {{ article.lastRevision.title }}

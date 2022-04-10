@@ -7,6 +7,7 @@
         <id name="id" type="uuid"/>
 
         <field name="createdAt" type="datetime_immutable"/>
+        <field name="locale" type="string"/>
         <field name="title" type="string"/>
         <field name="slug" type="string"/>
         <field name="body" type="text"/>

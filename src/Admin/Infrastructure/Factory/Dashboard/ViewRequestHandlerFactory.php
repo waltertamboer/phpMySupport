@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
 use Support\Admin\Application\RequestHandler\Dashboard\View;
 use Mezzio\Template\TemplateRendererInterface;
+use Support\System\Domain\I18n\LocaleRepository;
 
 final class ViewRequestHandlerFactory
 {
@@ -16,6 +17,7 @@ final class ViewRequestHandlerFactory
         return new View(
             $container->get(TemplateRendererInterface::class),
             $container->get(EntityManagerInterface::class),
+            $container->get(LocaleRepository::class),
         );
     }
 }

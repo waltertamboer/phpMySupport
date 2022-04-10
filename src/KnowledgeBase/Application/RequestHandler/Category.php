@@ -12,6 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Support\KnowledgeBase\Domain\Category\Bus\Command\RegisterCategoryView;
 use Support\KnowledgeBase\Domain\Category\Bus\Query\FindArticlesForCategory;
 use Support\KnowledgeBase\Domain\Category\Bus\Query\FindCategoryBySlug;
+use Support\KnowledgeBase\Domain\Category\CategoryLocale;
 use Support\KnowledgeBase\Domain\Category\CategorySlug;
 use Support\System\Application\Exception\ResourceNotFound;
 use Support\System\Domain\Bus\Command\CommandBus;
@@ -28,7 +29,10 @@ final class Category implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $category = $this->queryBus->query(new FindCategoryBySlug(new CategorySlug($request->getAttribute('slug'))));
+        $category = $this->queryBus->query(new FindCategoryBySlug(
+            new CategoryLocale($request->getAttribute('locale')),
+            new CategorySlug($request->getAttribute('slug')),
+        ));
         assert($category === null || $category instanceof \Support\KnowledgeBase\Domain\Category\Category);
 
         if ($category === null) {
@@ -39,12 +43,14 @@ final class Category implements RequestHandlerInterface
 
         $articles = $this->queryBus->query(new FindArticlesForCategory($category));
 
-        return new HtmlResponse($this->renderer->render(
+        $response = new HtmlResponse($this->renderer->render(
             '@site/knowledge-base/category.html.twig',
             [
                 'category' => $category,
                 'articles' => $articles,
             ]
         ));
+
+        return $response->withAddedHeader('Content-Language', $category->getLastRevision()->getLocale());
     }
 }

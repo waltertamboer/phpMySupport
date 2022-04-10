@@ -19,6 +19,7 @@ class Article
 
     public function __construct(
         private readonly User $createdBy,
+        string $locale,
         string $title,
         string $slug,
         string $body,
@@ -27,7 +28,7 @@ class Article
         $this->createdAt = new DateTimeImmutable();
         $this->revisions = new ArticleRevisionCollection();
 
-        $this->createRevision($this->createdBy, $title, $slug, $body);
+        $this->createRevision($this->createdBy, $locale, $title, $slug, $body);
     }
 
     public function getId(): UuidInterface
@@ -40,15 +41,23 @@ class Article
         return $this->createdAt;
     }
 
-    public function createRevision(User $user, string $title, string $slug, string $body): ArticleRevision
-    {
-        $this->lastRevision = new ArticleRevision($this, $user, $title, $slug, $body);
+    public function createRevision(
+        User $user,
+        string $locale,
+        string $title,
+        string $slug,
+        string $body
+    ): ArticleRevision {
+        $this->lastRevision = new ArticleRevision($this, $user, $locale, $title, $slug, $body);
 
         $this->revisions->add($this->lastRevision);
 
         return $this->lastRevision;
     }
 
+    /**
+     * @return ArticleRevision[]
+     */
     public function getRevisions(): array
     {
         return $this->revisions->toArray();

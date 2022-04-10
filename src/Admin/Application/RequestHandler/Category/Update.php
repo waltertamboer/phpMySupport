@@ -13,16 +13,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Support\KnowledgeBase\Domain\Category\Category;
-use Support\KnowledgeBase\Domain\Category\CategoryName;
-use Support\KnowledgeBase\Domain\Category\CategorySlug;
 use Support\KnowledgeBase\Domain\Media\File;
 use Support\System\Application\Exception\ResourceNotFound;
+use Support\System\Domain\I18n\LocaleRepository;
 
 final class Update implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
+        private readonly LocaleRepository $localeRepository,
     ) {
     }
 
@@ -44,6 +44,7 @@ final class Update implements RequestHandlerInterface
         $formData = [
             'name' => $entity->getLastRevision()->getName(),
             'slug' => $entity->getLastRevision()->getSlug(),
+            'locale' => $this->localeRepository->lookup($entity->getLastRevision()->getLocale()),
             'thumbnail' => $entity->getLastRevision()->getThumbnail()?->getId(),
         ];
 
@@ -53,6 +54,8 @@ final class Update implements RequestHandlerInterface
         if ($request->getMethod() === 'POST') {
             $formData = $request->getParsedBody();
 
+            $formLocale = $formData['locale'] ?? 'en';
+            $formLocale = $this->localeRepository->lookup($formLocale);
             $formName = $formData['name'] ?? '';
             $formSlug = $formData['slug'] ?? '';
 
@@ -68,8 +71,11 @@ final class Update implements RequestHandlerInterface
             } elseif ($formSlug !== $entity->getLastRevision()->getSlug() && $this->hasExistingSlug($formSlug)) {
                 $error = true;
                 $errorMsg = 'The slug already exists.';
+            } elseif ($formLocale === '') {
+                $error = true;
+                $errorMsg = 'No locale provided.';
             } else {
-                $revision = $entity->createRevision($user, $formData['name'], $formData['slug']);
+                $revision = $entity->createRevision($user, $formLocale->getId(), $formName, $formSlug);
                 $revision->setThumbnail($this->loadThumbnail($formData['thumbnail']));
 
                 $this->entityManager->flush();

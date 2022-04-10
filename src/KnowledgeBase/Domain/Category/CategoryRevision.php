@@ -16,6 +16,7 @@ class CategoryRevision
     private DateTimeImmutable $createdAt;
     private User $createdBy;
     private Category $category;
+    private string $locale;
     private string $name;
     private string $slug;
     private ?File $thumbnail;
@@ -23,6 +24,7 @@ class CategoryRevision
     public function __construct(
         User $createdBy,
         Category $category,
+        string $locale,
         string $name,
         string $slug,
     ) {
@@ -30,6 +32,7 @@ class CategoryRevision
         $this->createdAt = new DateTimeImmutable();
         $this->createdBy = $createdBy;
         $this->category = $category;
+        $this->locale = $locale;
         $this->name = $name;
         $this->slug = $slug;
         $this->thumbnail = null;
@@ -53,6 +56,11 @@ class CategoryRevision
     public function getCategory(): Category
     {
         return $this->category;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
     }
 
     public function getName(): string

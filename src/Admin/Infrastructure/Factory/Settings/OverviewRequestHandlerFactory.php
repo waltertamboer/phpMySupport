@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Support\Admin\Application\RequestHandler\Settings\Overview;
+use Support\System\Domain\I18n\LocaleRepository;
 
 final class OverviewRequestHandlerFactory
 {
@@ -16,6 +17,7 @@ final class OverviewRequestHandlerFactory
         return new Overview(
             $container->get(TemplateRendererInterface::class),
             $container->get(EntityManagerInterface::class),
+            $container->get(LocaleRepository::class),
         );
     }
 }

@@ -1,5 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
+{% if locale is not defined %}
 <html lang="en">
+{% else %}
+<html lang="{{ locale }}">
+{% endif %}
     <head>
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -137,8 +141,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <div class="me-auto"></div>
 
-                    {% if siteSearchEnabled() %}
-                        <form class="d-flex" action="{{ url('search') }}" method="get">
+                    {% if searchEnabled() %}
+                        <form class="d-flex" action="{{ url('search', {
+                            locale: locale
+                        }) }}" method="get">
                             <input class="form-control me-2"
                                    name="q"
                                    type="search"

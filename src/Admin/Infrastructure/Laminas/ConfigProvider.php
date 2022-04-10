@@ -70,6 +70,7 @@ final class ConfigProvider
 
                 RequestHandler\Settings\Overview::class => Factory\Settings\OverviewRequestHandlerFactory::class,
                 RequestHandler\Settings\ExportImport::class => Factory\Settings\ExportImportRequestHandlerFactory::class,
+                RequestHandler\Settings\Locales::class => Factory\Settings\LocalesRequestHandlerFactory::class,
 
                 RequestHandler\Dashboard\View::class => Factory\Dashboard\ViewRequestHandlerFactory::class,
 
@@ -320,6 +321,16 @@ final class ConfigProvider
                     RequestHandler\Settings\ExportImport::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
+            ],
+
+            'admin-autocomplete-locales' => [
+                'name' => 'admin-autocomplete-locales',
+                'path' => '/admin/autocomplete/locales',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    RequestHandler\Settings\Locales::class,
+                ],
+                'allowed_methods' => [ 'GET' ],
             ],
         ];
     }
