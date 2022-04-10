@@ -22,8 +22,20 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Username</th>
-                                <th>Role</th>
+                                <th>
+                                    <a href="{{ url('admin-user-overview', {}, {
+                                        'sort': sortQuery('username', sortQuery),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Username</a>
+                                </th>
+                                <th>
+                                    <a href="{{ url('admin-user-overview', {}, {
+                                        'sort': sortQuery('role', sortQuery),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Role</a>
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>

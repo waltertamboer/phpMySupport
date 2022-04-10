@@ -22,9 +22,27 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Slug</th>
-                                <th>Locale</th>
+                                <th>
+                                    <a href="{{ url('admin-category-overview', {}, {
+                                        'sort': sortQuery('name', sortQuery),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Title</a>
+                                </th>
+                                <th>
+                                    <a href="{{ url('admin-category-overview', {}, {
+                                        'sort': sortQuery('slug', sortQuery),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Slug</a>
+                                </th>
+                                <th>
+                                    <a href="{{ url('admin-category-overview', {}, {
+                                        'sort': sortQuery('locale', sortQuery),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Locale</a>
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>

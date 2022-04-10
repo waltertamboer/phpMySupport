@@ -34,13 +34,32 @@ final class Overview implements RequestHandlerInterface
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('u');
         $qb->from(User::class, 'u');
-        $qb->orderBy($qb->expr()->asc('u.username'));
+
+        $sortQuery = ($request->getQueryParams()['sort']) ?? '+title';
+        switch ($sortQuery) {
+            case '+role':
+                $qb->orderBy($qb->expr()->asc('u.role'));
+                break;
+
+            case '-role':
+                $qb->orderBy($qb->expr()->desc('u.role'));
+                break;
+
+            case '-username':
+                $qb->orderBy($qb->expr()->desc('u.username'));
+                break;
+
+            default:
+                $qb->orderBy($qb->expr()->asc('u.username'));
+                break;
+        }
 
         $users = $qb->getQuery()->getResult();
 
         return new HtmlResponse($this->renderer->render(
             '@admin/user/overview.html.twig',
             [
+                'sortQuery' => $sortQuery,
                 'users' => $users,
             ],
         ));

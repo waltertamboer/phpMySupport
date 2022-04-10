@@ -44,6 +44,16 @@ final class ApplicationRuntime extends AbstractExtension implements GlobalsInter
             new TwigFunction('tinyMceConfig', static function () use ($config): array {
                 return json_decode($config->get('tinyMceConfig'), true);
             }),
+            new TwigFunction('sortQuery', static function (string $field, string $currentValue): string {
+                $ascending = str_starts_with($currentValue, '+');
+                $currentField = substr($currentValue, 1);
+
+                if ($currentField === $field) {
+                    return $ascending ? '-' . $field : '+' . $field;
+                }
+
+                return '+' . $field;
+            }),
         ];
     }
 

@@ -35,14 +35,41 @@ final class Overview implements RequestHandlerInterface
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('a');
         $qb->from(Article::class, 'a');
-        $qb->join('a.lastRevision', 'r');
-        $qb->orderBy($qb->expr()->asc('r.title'));
+        $qb->join('a.lastRevision', 'lr');
+
+        $sortQuery = ($request->getQueryParams()['sort']) ?? '+title';
+        switch ($sortQuery) {
+            case '+locale':
+                $qb->orderBy($qb->expr()->asc('lr.locale'));
+                break;
+
+            case '-locale':
+                $qb->orderBy($qb->expr()->desc('lr.locale'));
+                break;
+
+            case '+slug':
+                $qb->orderBy($qb->expr()->asc('lr.slug'));
+                break;
+
+            case '-slug':
+                $qb->orderBy($qb->expr()->desc('lr.slug'));
+                break;
+
+            case '-title':
+                $qb->orderBy($qb->expr()->desc('lr.title'));
+                break;
+
+            default:
+                $qb->orderBy($qb->expr()->asc('lr.title'));
+                break;
+        }
 
         $articles = $qb->getQuery()->getResult();
 
         return new HtmlResponse($this->renderer->render(
             '@admin/article/overview.html.twig',
             [
+                'sortQuery' => $sortQuery,
                 'articles' => array_map(function (Article $article): array {
                     return [
                         'id' => $article->getId()->toString(),

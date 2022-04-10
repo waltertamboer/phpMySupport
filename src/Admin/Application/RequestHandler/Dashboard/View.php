@@ -49,8 +49,34 @@ final class View implements RequestHandlerInterface
         $qb->addGroupBy('lr.title');
         $qb->addGroupBy('lr.slug');
         $qb->addGroupBy('lr.locale');
-        $qb->orderBy($qb->expr()->desc('views'));
         $qb->setMaxResults(10);
+
+        $sortQueryArticle = ($request->getQueryParams()['articleSort']) ?? '-views';
+        switch ($sortQueryArticle) {
+            case '+title':
+                $qb->orderBy($qb->expr()->asc('lr.title'));
+                break;
+
+            case '-title':
+                $qb->orderBy($qb->expr()->desc('lr.title'));
+                break;
+
+            case '+locale':
+                $qb->orderBy($qb->expr()->asc('lr.locale'));
+                break;
+
+            case '-locale':
+                $qb->orderBy($qb->expr()->desc('lr.locale'));
+                break;
+
+            case '+views':
+                $qb->orderBy($qb->expr()->asc('views'));
+                break;
+
+            default:
+                $qb->orderBy($qb->expr()->desc('views'));
+                break;
+        }
 
         $populairArticles = $qb->getQuery()->getResult();
 
@@ -70,14 +96,42 @@ final class View implements RequestHandlerInterface
         $qb->addGroupBy('lr.name');
         $qb->addGroupBy('lr.slug');
         $qb->addGroupBy('lr.locale');
-        $qb->orderBy($qb->expr()->desc('views'));
         $qb->setMaxResults(10);
+
+        $sortQueryCategory = ($request->getQueryParams()['categorySort']) ?? '-views';
+        switch ($sortQueryCategory) {
+            case '+name':
+                $qb->orderBy($qb->expr()->asc('lr.name'));
+                break;
+
+            case '-name':
+                $qb->orderBy($qb->expr()->desc('lr.name'));
+                break;
+
+            case '+locale':
+                $qb->orderBy($qb->expr()->asc('lr.locale'));
+                break;
+
+            case '-locale':
+                $qb->orderBy($qb->expr()->desc('lr.locale'));
+                break;
+
+            case '+views':
+                $qb->orderBy($qb->expr()->asc('views'));
+                break;
+
+            default:
+                $qb->orderBy($qb->expr()->desc('views'));
+                break;
+        }
 
         $populairCategories = $qb->getQuery()->getResult();
 
         return new HtmlResponse($this->renderer->render(
             '@admin/dashboard/view.html.twig',
             [
+                'sortArticle' => $sortQueryArticle,
+                'sortCategory' => $sortQueryCategory,
                 'populairArticles' => array_map(function (array $item): PopulairArticle {
                     return new PopulairArticle(
                         $item['id'],

@@ -22,9 +22,27 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Title</th>
-                                <th>Locale</th>
-                                <th class="text-end">Views</th>
+                                <th>
+                                    <a href="{{ url('admin-dashboard', {}, {
+                                        'articleSort': sortQuery('title', sortArticle),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Title</a>
+                                </th>
+                                <th>
+                                    <a href="{{ url('admin-dashboard', {}, {
+                                        'articleSort': sortQuery('locale', sortArticle),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Locale</a>
+                                </th>
+                                <th class="text-end">
+                                    <a href="{{ url('admin-dashboard', {}, {
+                                        'articleSort': sortQuery('views', sortArticle),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Views</a>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -80,9 +98,27 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Title</th>
-                                <th>Locale</th>
-                                <th class="text-end">Views</th>
+                                <th>
+                                    <a href="{{ url('admin-dashboard', {}, {
+                                        'categorySort': sortQuery('name', sortCategory),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Title</a>
+                                </th>
+                                <th>
+                                    <a href="{{ url('admin-dashboard', {}, {
+                                        'categorySort': sortQuery('locale', sortCategory),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Locale</a>
+                                </th>
+                                <th class="text-end">
+                                    <a href="{{ url('admin-dashboard', {}, {
+                                        'categorySort': sortQuery('views', sortCategory),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Views</a>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>

@@ -37,14 +37,41 @@ final class Overview implements RequestHandlerInterface
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('c');
         $qb->from(Category::class, 'c');
-        $qb->join('c.lastRevision', 'r');
-        $qb->orderBy($qb->expr()->asc('r.name'));
+        $qb->join('c.lastRevision', 'lr');
+
+        $sortQuery = ($request->getQueryParams()['sort']) ?? '+name';
+        switch ($sortQuery) {
+            case '+locale':
+                $qb->orderBy($qb->expr()->asc('lr.locale'));
+                break;
+
+            case '-locale':
+                $qb->orderBy($qb->expr()->desc('lr.locale'));
+                break;
+
+            case '+slug':
+                $qb->orderBy($qb->expr()->asc('lr.slug'));
+                break;
+
+            case '-slug':
+                $qb->orderBy($qb->expr()->desc('lr.slug'));
+                break;
+
+            case '-name':
+                $qb->orderBy($qb->expr()->desc('lr.name'));
+                break;
+
+            default:
+                $qb->orderBy($qb->expr()->asc('lr.name'));
+                break;
+        }
 
         $categories = $qb->getQuery()->getResult();
 
         return new HtmlResponse($this->renderer->render(
             '@admin/category/overview.html.twig',
             [
+                'sortQuery' => $sortQuery,
                 'categories' => array_map(function (Category $category): array {
                     return [
                         'id' => $category->getId()->toString(),
