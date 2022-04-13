@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+cp node_modules/bootstrap/dist/css/bootstrap.min.css public/css/
+cp node_modules/bootstrap/dist/js/bootstrap.bundle.min.js public/js/
+
+cp node_modules/flag-icons/flags/4x3/* public/svg/
+cp node_modules/flag-icons/css/flag-icons.min.css public/css/
+
+wget -O themify.zip https://themify.me/download/7/
+unzip themify.zip
+mv themify-icons/themify-icons.css public/fonts/themify/themify-icons.css
+mv themify-icons/fonts/* public/fonts/themify/
+rm themify.zip
+rm -rf themify-icons

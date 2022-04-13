@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+bootstrap@^5.1.3:
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.1.3.tgz#ba081b0c130f810fa70900acbc1c6d3c28fa8f34"
+  integrity sha512-fcQztozJ8jToQWXxVuEyXWW+dSo8AiXWKwiSSrKWsRB/Qt+Ewwza+JWoLKiTuQLaEPhdNAJ7+Dosc9DOIqNy7Q==
+
 flag-icons@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/flag-icons/-/flag-icons-6.2.0.tgz#afc990e7b55c82dc1d02fd5b20c1bcf305c0a9f8"
