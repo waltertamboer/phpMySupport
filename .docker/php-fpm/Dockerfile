@@ -36,7 +36,9 @@ COPY --chown=root:www-data .docker/php-fpm/usr/local/etc/php/conf.d/php-dev.ini 
 COPY --chown=root:root .docker/php-fpm/usr/local/bin/dev-entrypoint.sh /usr/local/bin/dev-entrypoint.sh
 
 RUN pecl install xdebug; \
-    docker-php-ext-enable xdebug;
+    docker-php-ext-enable xdebug; \
+    apk add npm; \
+    npm install --global yarn;
 
 ENTRYPOINT ["/usr/local/bin/dev-entrypoint.sh"]
 CMD ["php-fpm"]

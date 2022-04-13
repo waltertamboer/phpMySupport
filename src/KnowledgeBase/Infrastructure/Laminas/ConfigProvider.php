@@ -45,9 +45,10 @@ final class ConfigProvider
                 Category\Bus\Query\FindCategoryBySlugHandler::class => Factory\FindCategoryBySlugHandlerFactory::class,
                 Category\Bus\Query\GetCategoryOverviewHandler::class => Factory\GetCategoryOverviewHandlerFactory::class,
 
-                RequestHandler\Homepage::class => Factory\HomepageRequestHandlerFactory::class,
+                RequestHandler\LocaleSelector::class => Factory\LocaleSelectorRequestHandlerFactory::class,
                 RequestHandler\Article::class => Factory\ArticleRequestHandlerFactory::class,
                 RequestHandler\Category::class => Factory\CategoryRequestHandlerFactory::class,
+                RequestHandler\CategoryOverview::class => Factory\CategoryOverviewRequestHandlerFactory::class,
                 RequestHandler\MediaFile::class => Factory\MediaFileRequestHandlerFactory::class,
                 RequestHandler\Search::class => Factory\SearchRequestHandlerFactory::class,
             ],
@@ -79,21 +80,21 @@ final class ConfigProvider
     private function getRoutes(): array
     {
         return [
-            'home' => [
-                'name' => 'home',
+            'locale-selector' => [
+                'name' => 'locale-selector',
                 'path' => '/',
                 'middleware' => [
                     \Support\System\Application\Middleware\SettingsMiddleware::class,
-                    RequestHandler\Homepage::class,
+                    RequestHandler\LocaleSelector::class,
                 ],
                 'allowed_methods' => [ 'GET' ],
             ],
-            'home-locale' => [
-                'name' => 'home-locale',
+            'category-overview' => [
+                'name' => 'category-overview',
                 'path' => '/{locale}',
                 'middleware' => [
                     \Support\System\Application\Middleware\SettingsMiddleware::class,
-                    RequestHandler\Homepage::class,
+                    RequestHandler\CategoryOverview::class,
                 ],
                 'allowed_methods' => [ 'GET' ],
             ],

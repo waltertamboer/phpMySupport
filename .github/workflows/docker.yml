@@ -18,6 +18,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-dev -o
 
+      - name: Install Yarn dependencies
+        run: yarn
+
       - name: Login to registry
         run: echo $GHCR_TOKEN | docker login ghcr.io -u $GHCR_USERNAME --password-stdin
         env:

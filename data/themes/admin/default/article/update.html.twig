@@ -69,6 +69,7 @@
                                         {% for category in categories %}
                                             <option value="{{ category.id }}"{% if category.id == selectedCategory %} selected{% endif %}>
                                                 {{ category.lastRevision.name }}
+                                                ({{ category.lastRevision.locale }})
                                             </option>
                                         {% endfor %}
                                     </select>

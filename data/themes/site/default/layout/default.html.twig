@@ -108,17 +108,20 @@
                 margin-top: 1rem;
             }
 
-            .category-box {
+            .category-box,
+            .locale-box {
                 background-color: #eee;
             }
 
-            .category-box a {
+            .category-box a,
+            .locale-box a {
                 display: block;
                 padding: 2rem 1rem;
                 text-align: center;
             }
 
-            .category-box-logo img {
+            .category-box-logo img,
+            .locale-box-logo img {
                 height: 90px;
                 width: 90px;
             }
@@ -127,7 +130,7 @@
     <body>
         <nav class="navbar navbar-expand-lg d-print-none">
             <div class="container-sm">
-                <a class="navbar-brand" href="{{ url('home') }}">{{ siteTitle() }}</a>
+                <a class="navbar-brand" href="{{ url('locale-selector') }}">{{ siteTitle() }}</a>
                 <button class="navbar-toggler"
                         type="button"
                         data-bs-toggle="collapse"
