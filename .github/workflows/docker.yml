@@ -21,7 +21,7 @@ jobs:
       - name: Install Yarn dependencies
         run: yarn
 
-      - name: Install Yarn dependencies
+      - name: Build
         run: scripts/local-development/build
 
       - name: Login to registry
