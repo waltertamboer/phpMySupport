@@ -64,6 +64,13 @@
 
                     <h2 class="mt-4">Localization</h2>
 
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="1" id="googleTranslateEnabled" name="googleTranslateEnabled"{% if formData.googleTranslateEnabled == '1' %} checked{% endif %}>
+                        <label class="form-check-label" for="googleTranslateEnabled">
+                            Google translate enabled
+                        </label>
+                    </div>
+
                     <div class="mb-3">
                         <label for="defaultLocale" class="form-label">Default locale</label>
                         <input type="text"

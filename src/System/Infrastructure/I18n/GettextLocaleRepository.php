@@ -48,7 +48,7 @@ final class GettextLocaleRepository implements LocaleRepository
             return null;
         }
 
-        return new Locale($language->id, $language->name);
+        return $this->convertLanguageToLocale($language);
     }
 
     public function query(string $query): LocaleList
@@ -58,10 +58,27 @@ final class GettextLocaleRepository implements LocaleRepository
             return strpos(strtolower($item->name), strtolower($query)) !== false;
         });
         $languages = array_values($languages);
-        $languages = array_map(static function (Language $language): Locale {
-            return new Locale($language->id, $language->name);
+        $languages = array_map(function (Language $language): Locale {
+            return $this->convertLanguageToLocale($language);
         }, $languages);
 
         return new LocaleList($languages);
+    }
+
+    private function convertLanguageToLocale(Language $language): Locale
+    {
+        $splitted = explode('_', $language->id);
+
+        if (!isset($splitted[1])) {
+            $country = $splitted[0];
+        } else {
+            $country = strtolower($splitted[1]);
+        }
+
+        if ($country === 'zh' || $country === 'hans') {
+            $country = 'cn';
+        }
+
+        return new Locale($language->id, $language->name, $country);
     }
 }

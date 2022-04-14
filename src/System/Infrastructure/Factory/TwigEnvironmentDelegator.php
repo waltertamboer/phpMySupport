@@ -8,6 +8,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\DelegatorFactoryInterface;
 use Mezzio\Twig\TwigRendererFactory;
 use Support\System\Domain\ApplicationConfig;
+use Support\System\Domain\SettingManager;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
@@ -26,25 +27,19 @@ final class TwigEnvironmentDelegator implements DelegatorFactoryInterface
 
     private function createLoader(ContainerInterface $container): LoaderInterface
     {
-        $config = $container->get(ApplicationConfig::class);
-        assert($config instanceof ApplicationConfig);
+        $settingManager = $container->get(SettingManager::class);
+        assert($settingManager instanceof SettingManager);
 
         $loader = new FilesystemLoader();
-
         $loader->addPath(sprintf(
             'data/themes/site/%s',
-            $config->getSiteTheme()
+            $settingManager->get('theme')
         ), 'site');
 
         $loader->addPath(sprintf(
             'data/themes/admin/%s',
-            $config->getSiteThemeAdmin()
+            $settingManager->get('themeAdmin')
         ), 'admin');
-
-        $loader->addPath(sprintf(
-            'data/themes/site/%s/error',
-            $config->getSiteTheme()
-        ), 'error');
 
         return $loader;
     }

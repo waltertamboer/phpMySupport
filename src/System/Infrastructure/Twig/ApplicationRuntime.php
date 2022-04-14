@@ -35,6 +35,9 @@ final class ApplicationRuntime extends AbstractExtension implements GlobalsInter
             new TwigFunction('searchEnabled', static function () use ($config): bool {
                 return $config->get('searchEnabled') === '1';
             }),
+            new TwigFunction('googleTranslateEnabled', static function () use ($config): bool {
+                return $config->get('googleTranslateEnabled') === '1';
+            }),
             new TwigFunction('localizationEnabled', static function () use ($config): bool {
                 return $config->get('localizationEnabled') === '1';
             }),

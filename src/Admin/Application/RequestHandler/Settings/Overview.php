@@ -66,6 +66,7 @@ final class Overview implements RequestHandlerInterface
 
             $checkboxes = [
                 'searchEnabled',
+                'googleTranslateEnabled',
             ];
 
             foreach ($formData as $formName => $formValue) {
@@ -77,9 +78,6 @@ final class Overview implements RequestHandlerInterface
             }
 
             foreach ($checkboxes as $formName) {
-                if (!array_key_exists($formName, $settings)) {
-                }
-
                 if (!array_key_exists($formName, $formData)) {
                     $settings[$formName]->setValue('0');
                 }
