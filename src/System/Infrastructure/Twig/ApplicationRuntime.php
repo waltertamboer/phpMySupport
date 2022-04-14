@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Support\System\Infrastructure\Twig;
 
 use Support\System\Domain\ApplicationConfig;
+use Support\System\Domain\I18n\LocaleList;
+use Support\System\Domain\I18n\LocaleRepository;
 use Support\System\Domain\SettingManager;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -14,7 +16,8 @@ use Twig\TwigFunction;
 final class ApplicationRuntime extends AbstractExtension implements GlobalsInterface
 {
     public function __construct(
-        private readonly SettingManager $settingManager
+        private readonly SettingManager $settingManager,
+        private readonly LocaleRepository $localeRepository,
     ) {
     }
 
@@ -56,6 +59,11 @@ final class ApplicationRuntime extends AbstractExtension implements GlobalsInter
                 }
 
                 return '+' . $field;
+            }),
+            new TwigFunction('locales', function (): LocaleList {
+                $locales = $this->localeRepository->getUsedLocales();
+
+                return $locales;
             }),
         ];
     }
