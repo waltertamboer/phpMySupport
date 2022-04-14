@@ -37,6 +37,11 @@ final class TwigEnvironmentDelegator implements DelegatorFactoryInterface
         ), 'site');
 
         $loader->addPath(sprintf(
+            'data/themes/site/%s/error',
+            $settingManager->get('theme')
+        ), 'error');
+
+        $loader->addPath(sprintf(
             'data/themes/admin/%s',
             $settingManager->get('themeAdmin')
         ), 'admin');
