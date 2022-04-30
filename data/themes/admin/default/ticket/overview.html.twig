@@ -1,0 +1,99 @@
+{% extends '@admin/layout/admin.html.twig' %}
+
+{% block title %}Tickets{% endblock %}
+
+{% block content %}
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+                <h1>Tickets</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% include '@admin/ticket/submenu.html.twig' %}
+            </div>
+        </div>
+
+        {% if tickets | length > 0 %}
+            <div class="row">
+                <div class="col">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <a href="{{ url('admin-ticket-overview', {}, {
+                                        'sort': sortQuery('name', sortQuery),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Title</a>
+                                </th>
+                                <th>
+                                    <a href="{{ url('admin-ticket-overview', {}, {
+                                        'sort': sortQuery('slug', sortQuery),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Slug</a>
+                                </th>
+                                <th>
+                                    <a href="{{ url('admin-ticket-overview', {}, {
+                                        'sort': sortQuery('locale', sortQuery),
+                                    }, null, {
+                                        reuse_query_params: true
+                                    }) }}">Locale</a>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ticket in tickets %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url('admin-category-update', {
+                                            id: category.id
+                                        }) }}">{{ category.lastRevision.name }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url('admin-category-update', {
+                                            id: category.id
+                                        }) }}">{{ category.lastRevision.slug }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url('admin-category-update', {
+                                            id: category.id
+                                        }) }}">{{ category.lastRevision.locale.name }}</a>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="{{ url('category', {
+                                            locale: category.lastRevision.locale.id,
+                                            slug: category.lastRevision.slug
+                                        }) }}">View</a>
+                                        -
+                                        <a href="{{ url('admin-category-update', {
+                                            id: category.id
+                                        }) }}">Edit</a>
+                                        {% if authenticatedUser.isAdmin %}
+                                            -
+                                            <a href="{{ url('admin-category-delete', {
+                                                id: category.id
+                                            }) }}">Delete</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col">
+                    <p>
+                        Good job! No tickets found.
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

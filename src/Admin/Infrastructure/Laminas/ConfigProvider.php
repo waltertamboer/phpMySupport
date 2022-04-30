@@ -59,9 +59,13 @@ final class ConfigProvider
 
                 RequestHandler\Media\Create::class => Factory\Media\CreateRequestHandlerFactory::class,
                 RequestHandler\Media\Delete::class => Factory\Media\DeleteRequestHandlerFactory::class,
+                RequestHandler\Media\MediaXhr::class => Factory\Media\MediaXhrRequestHandlerFactory::class,
                 RequestHandler\Media\Update::class => Factory\Media\UpdateRequestHandlerFactory::class,
                 RequestHandler\Media\Overview::class => Factory\Media\OverviewRequestHandlerFactory::class,
+                RequestHandler\Media\SynchronizeFlag::class => Factory\Media\SynchronizeFlagRequestHandlerFactory::class,
                 RequestHandler\Media\TinyMceDialog::class => Factory\Media\TinyMceDialogHandlerFactory::class,
+
+                RequestHandler\Ticket\Overview::class => Factory\Ticket\OverviewRequestHandlerFactory::class,
 
                 RequestHandler\User\Create::class => Factory\User\CreateRequestHandlerFactory::class,
                 RequestHandler\User\Delete::class => Factory\User\DeleteRequestHandlerFactory::class,
@@ -69,8 +73,13 @@ final class ConfigProvider
                 RequestHandler\User\Overview::class => Factory\User\OverviewRequestHandlerFactory::class,
 
                 RequestHandler\Settings\Overview::class => Factory\Settings\OverviewRequestHandlerFactory::class,
-                RequestHandler\Settings\ExportImport::class => Factory\Settings\ExportImportRequestHandlerFactory::class,
+                RequestHandler\Settings\Export::class => Factory\Settings\ExportImportRequestHandlerFactory::class,
+                RequestHandler\Settings\AddLocale::class => Factory\Settings\AddLocaleRequestHandlerFactory::class,
+                RequestHandler\Settings\EditLocale::class => Factory\Settings\EditLocaleRequestHandlerFactory::class,
+                RequestHandler\Settings\DeleteLocale::class => Factory\Settings\DeleteLocaleRequestHandlerFactory::class,
                 RequestHandler\Settings\Locales::class => Factory\Settings\LocalesRequestHandlerFactory::class,
+                RequestHandler\Settings\LocalesXhr::class => Factory\Settings\LocalesXhrRequestHandlerFactory::class,
+                RequestHandler\Settings\UsedLocalesXhr::class => Factory\Settings\UsedLocalesXhrRequestHandlerFactory::class,
 
                 RequestHandler\Dashboard\View::class => Factory\Dashboard\ViewRequestHandlerFactory::class,
 
@@ -250,6 +259,16 @@ final class ConfigProvider
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
             ],
+            'admin-media-sync-locale-flag' => [
+                'name' => 'admin-media-sync-locale-flag',
+                'path' => '/admin/media/sync-locale-flag/{localeId}',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
+                    RequestHandler\Media\SynchronizeFlag::class,
+                ],
+                'allowed_methods' => [ 'GET', 'POST' ],
+            ],
             'admin-media-update' => [
                 'name' => 'admin-media-update',
                 'path' => '/admin/media/update/{id}',
@@ -259,6 +278,17 @@ final class ConfigProvider
                     RequestHandler\Media\Update::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
+            ],
+
+            'admin-ticket-overview' => [
+                'name' => 'admin-ticket-overview',
+                'path' => '/admin/tickets',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
+                    RequestHandler\Ticket\Overview::class,
+                ],
+                'allowed_methods' => [ 'GET' ],
             ],
 
             'admin-user-overview' => [
@@ -312,13 +342,53 @@ final class ConfigProvider
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
             ],
-            'admin-settings-export-import' => [
-                'name' => 'admin-settings-export-import',
-                'path' => '/admin/settings/export-import',
+            'admin-settings-export' => [
+                'name' => 'admin-settings-export',
+                'path' => '/admin/settings/export',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
                     \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
-                    RequestHandler\Settings\ExportImport::class,
+                    RequestHandler\Settings\Export::class,
+                ],
+                'allowed_methods' => [ 'GET', 'POST' ],
+            ],
+            'admin-settings-locales' => [
+                'name' => 'admin-settings-locales',
+                'path' => '/admin/settings/locales',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
+                    RequestHandler\Settings\Locales::class,
+                ],
+                'allowed_methods' => [ 'GET' ],
+            ],
+            'admin-settings-locales-add' => [
+                'name' => 'admin-settings-locales-add',
+                'path' => '/admin/settings/locales/add',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
+                    RequestHandler\Settings\AddLocale::class,
+                ],
+                'allowed_methods' => [ 'GET', 'POST' ],
+            ],
+            'admin-settings-locales-edit' => [
+                'name' => 'admin-settings-locales-edit',
+                'path' => '/admin/settings/locales/edit/{id}',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
+                    RequestHandler\Settings\EditLocale::class,
+                ],
+                'allowed_methods' => [ 'GET', 'POST' ],
+            ],
+            'admin-settings-locales-delete' => [
+                'name' => 'admin-settings-locales-delete',
+                'path' => '/admin/settings/locales/delete/{id}',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    \Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware::class,
+                    RequestHandler\Settings\DeleteLocale::class,
                 ],
                 'allowed_methods' => [ 'GET', 'POST' ],
             ],
@@ -328,7 +398,25 @@ final class ConfigProvider
                 'path' => '/admin/autocomplete/locales',
                 'middleware' => [
                     \Mezzio\Authentication\AuthenticationMiddleware::class,
-                    RequestHandler\Settings\Locales::class,
+                    RequestHandler\Settings\LocalesXhr::class,
+                ],
+                'allowed_methods' => [ 'GET' ],
+            ],
+            'admin-autocomplete-media' => [
+                'name' => 'admin-autocomplete-media',
+                'path' => '/admin/autocomplete/media',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    RequestHandler\Media\MediaXhr::class,
+                ],
+                'allowed_methods' => [ 'GET' ],
+            ],
+            'admin-autocomplete-used-locales' => [
+                'name' => 'admin-autocomplete-used-locales',
+                'path' => '/admin/autocomplete/used-locales',
+                'middleware' => [
+                    \Mezzio\Authentication\AuthenticationMiddleware::class,
+                    RequestHandler\Settings\UsedLocalesXhr::class,
                 ],
                 'allowed_methods' => [ 'GET' ],
             ],

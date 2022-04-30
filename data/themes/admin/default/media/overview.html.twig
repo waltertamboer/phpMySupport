@@ -35,6 +35,10 @@
                                     <td>{{ file.lastRevision.mimeType }}</td>
                                     <td>{{ file.lastRevision.size | formatBytes }}</td>
                                     <td class="text-end">
+                                        <a href="{{ url('media-file', {
+                                            id: file.id
+                                        }) }}">View</a>
+                                        -
                                         <a href="{{ url('admin-media-update', {
                                             id: file.id
                                         }) }}">Edit</a>

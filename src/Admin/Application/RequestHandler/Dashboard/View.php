@@ -14,14 +14,14 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Support\Admin\Domain\PopulairArticle;
 use Support\Admin\Domain\PopulairCategory;
 use Support\System\Application\Exception\ResourceNotFound;
-use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\I18n\LocaleQueryRepository;
 
 final class View implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
-        private readonly LocaleRepository $localeRepository,
+        private readonly LocaleQueryRepository $localeQueryRepository,
     ) {
     }
 
@@ -39,16 +39,19 @@ final class View implements RequestHandlerInterface
             'a.id',
             'lr.title',
             'lr.slug',
-            'lr.locale',
+            'l.name AS localeName',
+            'l.slug AS localeSlug',
         ]);
         $qb->from(\Support\KnowledgeBase\Domain\Article\ArticleRevisionView::class, 'arv');
         $qb->join('arv.articleRevision', 'ar');
         $qb->join('ar.article', 'a');
         $qb->join('a.lastRevision', 'lr');
+        $qb->join('lr.locale', 'l');
         $qb->addGroupBy('a.id');
         $qb->addGroupBy('lr.title');
         $qb->addGroupBy('lr.slug');
-        $qb->addGroupBy('lr.locale');
+        $qb->addGroupBy('l.name');
+        $qb->addGroupBy('l.slug');
         $qb->setMaxResults(10);
 
         $sortQueryArticle = ($request->getQueryParams()['articleSort']) ?? '-views';
@@ -62,11 +65,11 @@ final class View implements RequestHandlerInterface
                 break;
 
             case '+locale':
-                $qb->orderBy($qb->expr()->asc('lr.locale'));
+                $qb->orderBy($qb->expr()->asc('l.localeName'));
                 break;
 
             case '-locale':
-                $qb->orderBy($qb->expr()->desc('lr.locale'));
+                $qb->orderBy($qb->expr()->desc('l.localeName'));
                 break;
 
             case '+views':
@@ -86,16 +89,19 @@ final class View implements RequestHandlerInterface
             'c.id',
             'lr.name',
             'lr.slug',
-            'lr.locale',
+            'l.name AS localeName',
+            'l.slug AS localeSlug',
         ]);
         $qb->from(\Support\KnowledgeBase\Domain\Category\CategoryRevisionView::class, 'crv');
         $qb->join('crv.categoryRevision', 'cr');
         $qb->join('cr.category', 'c');
         $qb->join('c.lastRevision', 'lr');
+        $qb->join('lr.locale', 'l');
         $qb->addGroupBy('c.id');
         $qb->addGroupBy('lr.name');
         $qb->addGroupBy('lr.slug');
-        $qb->addGroupBy('lr.locale');
+        $qb->addGroupBy('l.name');
+        $qb->addGroupBy('l.slug');
         $qb->setMaxResults(10);
 
         $sortQueryCategory = ($request->getQueryParams()['categorySort']) ?? '-views';
@@ -109,11 +115,11 @@ final class View implements RequestHandlerInterface
                 break;
 
             case '+locale':
-                $qb->orderBy($qb->expr()->asc('lr.locale'));
+                $qb->orderBy($qb->expr()->asc('l.localeName'));
                 break;
 
             case '-locale':
-                $qb->orderBy($qb->expr()->desc('lr.locale'));
+                $qb->orderBy($qb->expr()->desc('l.localeName'));
                 break;
 
             case '+views':
@@ -137,7 +143,8 @@ final class View implements RequestHandlerInterface
                         $item['id'],
                         $item['title'],
                         $item['slug'],
-                        $this->localeRepository->lookup($item['locale']),
+                        $item['localeName'],
+                        $item['localeSlug'],
                         $item['views'],
                     );
                 }, $populairArticles),
@@ -146,7 +153,8 @@ final class View implements RequestHandlerInterface
                         $item['id'],
                         $item['name'],
                         $item['slug'],
-                        $this->localeRepository->lookup($item['locale']),
+                        $item['localeName'],
+                        $item['localeSlug'],
                         $item['views'],
                     );
                 }, $populairCategories),

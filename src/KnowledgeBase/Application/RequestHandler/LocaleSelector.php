@@ -12,8 +12,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Support\System\Domain\Bus\Query\QueryBus;
-use Support\System\Domain\I18n\LocaleRepository;
-use Support\System\Domain\SettingManager;
+use Support\System\Domain\I18n\Bus\Query\GetUsedLocales;
+use Support\System\Domain\I18n\UsedLocale;
 
 final class LocaleSelector implements RequestHandlerInterface
 {
@@ -21,19 +21,20 @@ final class LocaleSelector implements RequestHandlerInterface
         private readonly UrlHelper $urlHelper,
         private readonly TemplateRendererInterface $renderer,
         private readonly QueryBus $queryBus,
-        private readonly LocaleRepository $localeRepository,
-        private readonly SettingManager $settingManager,
     ) {
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $locales = $this->localeRepository->getUsedLocales();
+        $locales = $this->queryBus->query(new GetUsedLocales());
 
         if ($locales->count() === 1) {
+            $locale = $locales->get(0);
+            assert($locale instanceof UsedLocale);
+
             return new RedirectResponse(
                 $this->urlHelper->generate('category-overview', [
-                    'locale' => $locales->get(0)->getId(),
+                    'locale' => $locale->getSlug(),
                 ]),
             );
         }

@@ -11,8 +11,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Support\KnowledgeBase\Domain\Category\Bus\Query\GetCategoryOverview;
+use Support\System\Application\Exception\ResourceNotFound;
 use Support\System\Domain\Bus\Query\QueryBus;
-use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\I18n\Bus\Query\GetLocaleBySlug;
+use Support\System\Domain\I18n\Bus\Query\GetUsedLocaleBySlug;
+use Support\System\Domain\I18n\LocaleQueryRepository;
 use Support\System\Domain\SettingManager;
 
 final class CategoryOverview implements RequestHandlerInterface
@@ -34,7 +37,13 @@ final class CategoryOverview implements RequestHandlerInterface
             return new RedirectResponse('/' . $defaultLocale);
         }
 
-        $categories = $this->queryBus->query(new GetCategoryOverview($routeLocale));
+        $locale = $this->queryBus->query(new GetUsedLocaleBySlug($routeLocale));
+
+        if ($locale === null) {
+            throw ResourceNotFound::fromRequest($request);
+        }
+
+        $categories = $this->queryBus->query(new GetCategoryOverview($locale));
 
         $response = new HtmlResponse($this->renderer->render(
             '@site/knowledge-base/category-overview.html.twig',

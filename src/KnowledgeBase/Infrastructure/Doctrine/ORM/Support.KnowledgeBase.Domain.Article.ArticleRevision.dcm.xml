@@ -7,7 +7,6 @@
         <id name="id" type="uuid"/>
 
         <field name="createdAt" type="datetime_immutable"/>
-        <field name="locale" type="string"/>
         <field name="title" type="string"/>
         <field name="slug" type="string"/>
         <field name="body" type="text"/>
@@ -29,6 +28,15 @@
             </cascade>
 
             <join-column on-delete="CASCADE"/>
+        </many-to-one>
+
+        <many-to-one field="locale"
+                     target-entity="Support\System\Domain\I18n\UsedLocale">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+
+            <join-column on-delete="SET NULL" nullable="true"/>
         </many-to-one>
 
         <many-to-many field="categories"

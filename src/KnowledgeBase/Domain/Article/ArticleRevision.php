@@ -12,6 +12,7 @@ use Ramsey\Uuid\UuidInterface;
 use Support\Admin\Domain\Account\User;
 use Support\KnowledgeBase\Domain\Category\Category;
 use Support\KnowledgeBase\Domain\Category\CategoryCollection;
+use Support\System\Domain\I18n\UsedLocale;
 
 class ArticleRevision
 {
@@ -22,7 +23,7 @@ class ArticleRevision
     public function __construct(
         private Article $article,
         private User $createdBy,
-        private string $locale,
+        private ?UsedLocale $locale,
         private string $title,
         private string $slug,
         private string $body,
@@ -52,7 +53,7 @@ class ArticleRevision
         return $this->article;
     }
 
-    public function getLocale(): string
+    public function getLocale(): ?UsedLocale
     {
         return $this->locale;
     }

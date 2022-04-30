@@ -24,14 +24,14 @@
                             <tr>
                                 <th>
                                     <a href="{{ url('admin-article-overview', {}, {
-                                        'sort': sortQuery('title', sortQuery),
+                                        sort: sortQuery('title', sortQuery),
                                     }, null, {
                                         reuse_query_params: true
                                     }) }}">Title</a>
                                 </th>
                                 <th>
                                     <a href="{{ url('admin-article-overview', {}, {
-                                        'sort': sortQuery('slug', sortQuery),
+                                        sort: sortQuery('slug', sortQuery),
                                     }, null, {
                                         reuse_query_params: true
                                     }) }}">Slug</a>
@@ -62,14 +62,22 @@
                                     <td>
                                         <a href="{{ url('admin-article-update', {
                                             id: article.id
-                                        }) }}">{{ article.lastRevision.locale.name }}</a>
+                                        }) }}">
+                                            {% if article.lastRevision.locale %}
+                                                {{ article.lastRevision.locale.name }}
+                                            {% else %}
+                                                <em>None</em>
+                                            {% endif %}
+                                        </a>
                                     </td>
                                     <td class="text-end">
-                                        <a href="{{ url('article', {
-                                            locale: article.lastRevision.locale.id,
-                                            slug: article.lastRevision.slug
-                                        }) }}">View</a>
-                                        -
+                                        {% if article.lastRevision.locale %}
+                                            <a href="{{ url('article', {
+                                                locale: article.lastRevision.locale.slug,
+                                                slug: article.lastRevision.slug
+                                            }) }}">View</a>
+                                            -
+                                        {% endif %}
                                         <a href="{{ url('admin-article-update', {
                                             id: article.id
                                         }) }}">Edit</a>

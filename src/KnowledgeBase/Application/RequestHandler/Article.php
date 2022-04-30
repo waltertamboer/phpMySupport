@@ -15,6 +15,8 @@ use Support\KnowledgeBase\Domain\Article\Bus\Query\FindArticleBySlug;
 use Support\System\Application\Exception\ResourceNotFound;
 use Support\System\Domain\Bus\Command\CommandBus;
 use Support\System\Domain\Bus\Query\QueryBus;
+use Support\System\Domain\I18n\Bus\Query\GetUsedLocaleBySlug;
+use Support\System\Domain\I18n\UsedLocale;
 
 final class Article implements RequestHandlerInterface
 {
@@ -30,6 +32,9 @@ final class Article implements RequestHandlerInterface
         $routeLocale = $request->getAttribute('locale');
         $routeSlug = $request->getAttribute('slug');
 
+        $locale = $this->queryBus->query(new GetUsedLocaleBySlug($routeLocale));
+        assert($locale === null || $locale instanceof UsedLocale);
+
         $article = $this->queryBus->query(new FindArticleBySlug($routeSlug));
         assert($article === null || $article instanceof DomainArticle);
 
@@ -39,14 +44,12 @@ final class Article implements RequestHandlerInterface
 
         $this->commandBus->dispatch(new RegisterArticleView($article, $request));
 
-        $response = new HtmlResponse($this->renderer->render(
+        return new HtmlResponse($this->renderer->render(
             '@site/knowledge-base/article.html.twig',
             [
-                'locale' => $routeLocale,
+                'locale' => $locale,
                 'article' => $article,
             ]
         ));
-
-        return $response->withAddedHeader('Content-Language', $article->getLastRevision()->getLocale());
     }
 }

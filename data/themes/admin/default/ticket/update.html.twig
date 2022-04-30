@@ -1,0 +1,77 @@
+{% extends '@admin/layout/admin.html.twig' %}
+
+{% block title %}Update Category{% endblock %}
+
+{% block head_scripts %}
+    <script>
+        initializeSlugsForFormFields('name', 'slug');
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+                <h1>Edit Category {{ entity.lastRevision.name }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% include '@admin/category/submenu.html.twig' %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ errorMsg }}
+                    </div>
+                {% endif %}
+
+                <form action="" method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" name="name" id="name" class="form-control" autocomplete="off" value="{{ formData.name }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="slug" class="form-label">Slug</label>
+                        <input type="text" name="slug" id="slug" class="form-control" autocomplete="off" value="{{ formData.slug }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="locale" class="form-label">Locale</label>
+                        <input type="text"
+                               name="locale"
+                               id="locale"
+                               class="form-control"
+                               autocomplete="off"
+                               data-autocomplete="{{ url('admin-autocomplete-locales') }}?q={query}"
+                               data-autocomplete-label="{{ formData.locale.name }}"
+                               value="{{ formData.locale.id }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="thumbnail" class="form-label">Thumbnail</label>
+                        <select name="thumbnail" id="thumbnail" class="form-control">
+                            <option value="">None</option>
+                            {% for file in mediaFiles %}
+                                <option value="{{ file.id }}"{% if file.id == formData.thumbnail %} selected{% endif %}>
+                                    {{ file.lastRevision.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

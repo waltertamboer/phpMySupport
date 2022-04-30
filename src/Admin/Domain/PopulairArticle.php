@@ -13,7 +13,8 @@ final class PopulairArticle
         private readonly UuidInterface $articleId,
         private readonly string $articleTitle,
         private readonly string $articleSlug,
-        private readonly Locale $articleLocale,
+        private readonly string $articleLocaleName,
+        private readonly string $articleLocaleSlug,
         private readonly int $views,
     ) {
     }
@@ -33,9 +34,14 @@ final class PopulairArticle
         return $this->articleSlug;
     }
 
-    public function getArticleLocale(): Locale
+    public function getArticleLocaleName(): string
     {
-        return $this->articleLocale;
+        return $this->articleLocaleName;
+    }
+
+    public function getArticleLocaleSlug(): string
+    {
+        return $this->articleLocaleSlug;
     }
 
     public function getViews(): int

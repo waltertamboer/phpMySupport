@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Support\Admin\Domain\Account\User;
 use Support\System\Application\Exception\ResourceNotFound;
-use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\I18n\LocaleQueryRepository;
 use Support\System\Domain\Setting;
 
 final class Overview implements RequestHandlerInterface
@@ -22,7 +22,7 @@ final class Overview implements RequestHandlerInterface
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
-        private readonly LocaleRepository $localeRepository,
+        private readonly LocaleQueryRepository $LocaleQueryRepository,
     ) {
     }
 
@@ -50,7 +50,7 @@ final class Overview implements RequestHandlerInterface
         }
 
         if (array_key_exists('defaultLocale', $formData)) {
-            $defaultLocale = $this->localeRepository->lookup($formData['defaultLocale']);
+            $defaultLocale = $this->LocaleQueryRepository->lookup($formData['defaultLocale']);
 
             $formData['defaultLocaleValue'] = '';
             if ($defaultLocale !== null) {

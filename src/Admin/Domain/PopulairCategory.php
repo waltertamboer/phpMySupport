@@ -13,7 +13,8 @@ final class PopulairCategory
         private readonly UuidInterface $categoryId,
         private readonly string $categoryName,
         private readonly string $categorySlug,
-        private readonly Locale $categoryLocale,
+        private readonly string $categoryLocaleName,
+        private readonly string $categoryLocaleSlug,
         private readonly int $views,
     ) {
     }
@@ -33,9 +34,14 @@ final class PopulairCategory
         return $this->categorySlug;
     }
 
-    public function getCategoryLocale(): Locale
+    public function getCategoryLocaleName(): string
     {
-        return $this->categoryLocale;
+        return $this->categoryLocaleName;
+    }
+
+    public function getCategoryLocaleSlug(): string
+    {
+        return $this->categoryLocaleSlug;
     }
 
     public function getViews(): int

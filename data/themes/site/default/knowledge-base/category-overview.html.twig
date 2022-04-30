@@ -57,8 +57,8 @@
                         <div class="col-3">
                             <section class="category-box mb-4">
                                 <a href="{{ url('category', {
-                                    'locale': item.category.lastRevision.locale,
-                                    'slug': item.category.lastRevision.slug
+                                    locale: item.category.lastRevision.locale.slug,
+                                    slug: item.category.lastRevision.slug
                                 }) }}">
                                     <div class="category-box-logo">
                                         {% if item.category.lastRevision.thumbnail %}

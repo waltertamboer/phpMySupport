@@ -14,6 +14,8 @@ use Support\KnowledgeBase\Domain\Category\CategoryOverviewCollection;
 use Support\KnowledgeBase\Domain\Category\CategoryOverviewItem;
 use Support\KnowledgeBase\Domain\Category\CategoryRepository as BaseCategoryRepository;
 use Support\KnowledgeBase\Domain\Category\CategorySlug;
+use Support\System\Domain\I18n\Locale;
+use Support\System\Domain\I18n\UsedLocale;
 
 final class CategoryRepository implements BaseCategoryRepository
 {
@@ -33,8 +35,9 @@ final class CategoryRepository implements BaseCategoryRepository
         $qb->select('c');
         $qb->from(Category::class, 'c');
         $qb->join('c.lastRevision', 'r');
-        $qb->where($qb->expr()->eq('r.locale', ':locale'));
-        $qb->andWhere($qb->expr()->eq('r.slug', ':slug'));
+        $qb->join('r.locale', 'l');
+        $qb->where($qb->expr()->eq('r.slug', ':slug'));
+        $qb->andWhere($qb->expr()->eq('l.slug', ':locale'));
         $qb->setParameter('locale', $locale->value());
         $qb->setParameter('slug', $slug->value());
         $qb->setMaxResults(1);
@@ -42,7 +45,7 @@ final class CategoryRepository implements BaseCategoryRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
-    public function queryCategoryOverview(string $locale): CategoryOverviewCollection
+    public function queryCategoryOverview(UsedLocale $locale): CategoryOverviewCollection
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('c');
@@ -50,7 +53,7 @@ final class CategoryRepository implements BaseCategoryRepository
         $qb->join('c.lastRevision', 'r');
         $qb->where($qb->expr()->eq('r.locale', ':locale'));
         $qb->orderBy($qb->expr()->asc('r.name'));
-        $qb->setParameter('locale', $locale);
+        $qb->setParameter('locale', $locale->getId()->toString());
 
         $categories = $qb->getQuery()->getResult();
 

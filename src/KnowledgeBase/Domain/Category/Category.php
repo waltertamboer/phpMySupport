@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Support\Admin\Domain\Account\User;
+use Support\System\Domain\I18n\UsedLocale;
 
 class Category
 {
@@ -22,7 +23,7 @@ class Category
 
     public function __construct(
         User $createdBy,
-        string $locale,
+        UsedLocale $locale,
         string $name,
         string $slug,
     ) {
@@ -50,8 +51,12 @@ class Category
         return $this->createdBy;
     }
 
-    public function createRevision(User $createdBy, string $locale, string $name, string $slug): CategoryRevision
-    {
+    public function createRevision(
+        User $createdBy,
+        UsedLocale $locale,
+        string $name,
+        string $slug
+    ): CategoryRevision {
         $this->lastRevision = new CategoryRevision($createdBy, $this, $locale, $name, $slug);
 
         $this->revisions->add($this->lastRevision);

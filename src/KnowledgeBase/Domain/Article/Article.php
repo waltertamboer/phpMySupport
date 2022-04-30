@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Support\Admin\Domain\Account\User;
+use Support\System\Domain\I18n\UsedLocale;
 
 class Article
 {
@@ -19,7 +20,7 @@ class Article
 
     public function __construct(
         private readonly User $createdBy,
-        string $locale,
+        UsedLocale $locale,
         string $title,
         string $slug,
         string $body,
@@ -43,7 +44,7 @@ class Article
 
     public function createRevision(
         User $user,
-        string $locale,
+        UsedLocale $locale,
         string $title,
         string $slug,
         string $body

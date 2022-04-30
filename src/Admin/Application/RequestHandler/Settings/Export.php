@@ -26,7 +26,7 @@ use Support\KnowledgeBase\Domain\Media\File;
 use Support\KnowledgeBase\Domain\Media\FileRevision;
 use Support\System\Application\Exception\ResourceNotFound;
 
-final class ExportImport implements RequestHandlerInterface
+final class Export implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
@@ -53,7 +53,7 @@ final class ExportImport implements RequestHandlerInterface
         }
 
         return new HtmlResponse($this->renderer->render(
-            '@admin/settings/export-import.html.twig',
+            '@admin/settings/export.html.twig',
             [
             ],
         ));

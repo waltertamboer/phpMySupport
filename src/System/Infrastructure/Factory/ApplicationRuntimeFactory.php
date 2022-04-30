@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Support\System\Infrastructure\Factory;
 
 use Psr\Container\ContainerInterface;
-use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\I18n\UsedLocaleRepository;
 use Support\System\Domain\SettingManager;
 use Support\System\Infrastructure\Twig\ApplicationRuntime;
 
@@ -15,7 +15,7 @@ final class ApplicationRuntimeFactory
     {
         return new ApplicationRuntime(
             $container->get(SettingManager::class),
-            $container->get(LocaleRepository::class),
+            $container->get(UsedLocaleRepository::class),
         );
     }
 }

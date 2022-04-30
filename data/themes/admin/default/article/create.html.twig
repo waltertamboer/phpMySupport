@@ -5,7 +5,7 @@
 {% block head_scripts %}
     <script>
         initializeSlugsForFormFields('title', 'slug');
-        initializeCategoryFields();
+        initializeFormCollectionFields('#category-container');
     </script>
 
     <script src="https://cdn.tiny.cloud/1/{{ tinyMceApiKey() }}/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
@@ -54,9 +54,12 @@
                                id="locale"
                                class="form-control"
                                autocomplete="off"
-                               data-autocomplete="{{ url('admin-autocomplete-locales') }}?q={query}"
-                               data-autocomplete-label="{{ formData.locale.name }}"
-                               value="{{ formData.locale.id }}">
+                               data-autocomplete="{{ url('admin-autocomplete-used-locales') }}?q={query}"
+                               {% if formData.locale %}
+                                   data-autocomplete-label="{{ formData.locale.name }}"
+                                   value="{{ formData.locale.id }}"
+                               {% endif %}
+                               >
                     </div>
 
                     <div class="mb-3">
@@ -69,7 +72,9 @@
                                         {% for category in categories %}
                                             <option value="{{ category.id }}"{% if category.id == selectedCategory %} selected{% endif %}>
                                                 {{ category.lastRevision.name }}
-                                                ({{ category.lastRevision.locale }})
+                                                {% if category.lastRevision.locale %}
+                                                    ({{ category.lastRevision.locale.name }})
+                                                {% endif %}
                                             </option>
                                         {% endfor %}
                                     </select>

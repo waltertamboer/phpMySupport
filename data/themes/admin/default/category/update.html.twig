@@ -48,9 +48,12 @@
                                id="locale"
                                class="form-control"
                                autocomplete="off"
-                               data-autocomplete="{{ url('admin-autocomplete-locales') }}?q={query}"
-                               data-autocomplete-label="{{ formData.locale.name }}"
-                               value="{{ formData.locale.id }}">
+                               data-autocomplete="{{ url('admin-autocomplete-used-locales') }}?q={query}"
+                               {% if formData.locale %}
+                                   data-autocomplete-label="{{ formData.locale.name }}"
+                                   value="{{ formData.locale.id }}"
+                               {% endif %}
+                               >
                     </div>
 
                     <div class="mb-3">

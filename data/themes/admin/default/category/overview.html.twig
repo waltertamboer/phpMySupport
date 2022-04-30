@@ -62,14 +62,22 @@
                                     <td>
                                         <a href="{{ url('admin-category-update', {
                                             id: category.id
-                                        }) }}">{{ category.lastRevision.locale.name }}</a>
+                                        }) }}">
+                                            {% if category.lastRevision.locale %}
+                                                {{ category.lastRevision.locale.name }}
+                                            {% else %}
+                                                <em>None</em>
+                                            {% endif %}
+                                        </a>
                                     </td>
                                     <td class="text-end">
-                                        <a href="{{ url('category', {
-                                            locale: category.lastRevision.locale.id,
-                                            slug: category.lastRevision.slug
-                                        }) }}">View</a>
-                                        -
+                                        {% if category.lastRevision.locale %}
+                                            <a href="{{ url('category', {
+                                                locale: category.lastRevision.locale.slug,
+                                                slug: category.lastRevision.slug
+                                            }) }}">View</a>
+                                            -
+                                        {% endif %}
                                         <a href="{{ url('admin-category-update', {
                                             id: category.id
                                         }) }}">Edit</a>

@@ -12,13 +12,15 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Ramsey\Uuid\Uuid;
 use Support\KnowledgeBase\Domain\Article\Article;
 use Support\KnowledgeBase\Domain\Category\Category;
 use Support\KnowledgeBase\Domain\Category\CategoryName;
 use Support\KnowledgeBase\Domain\Category\CategorySlug;
 use Support\KnowledgeBase\Domain\Media\File;
 use Support\System\Application\Exception\ResourceNotFound;
-use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\I18n\LocaleQueryRepository;
+use Support\System\Domain\I18n\UsedLocale;
 use Support\System\Domain\SettingManager;
 
 final class Create implements RequestHandlerInterface
@@ -26,7 +28,7 @@ final class Create implements RequestHandlerInterface
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
-        private readonly LocaleRepository $localeRepository,
+        private readonly LocaleQueryRepository $LocaleQueryRepository,
         private readonly SettingManager $settingManager,
     ) {
     }
@@ -39,7 +41,11 @@ final class Create implements RequestHandlerInterface
             throw ResourceNotFound::fromRequest($request);
         }
 
-        $defaultLocale = $this->localeRepository->lookup($this->settingManager->get('defaultLocale', 'en_US'));
+        $defaultLocale = $this->loadLocale($this->settingManager->get('defaultLocale', ''));
+        $defaultLocale = $defaultLocale === null ? null : [
+            'id' => $defaultLocale->getId()->toString(),
+            'name' => $defaultLocale->getName(),
+        ];
 
         $formData = [
             'name' => '',
@@ -54,12 +60,14 @@ final class Create implements RequestHandlerInterface
         if ($request->getMethod() === 'POST') {
             $formData = $request->getParsedBody();
 
-            $formLocale = $formData['locale'] ?? 'en';
-            $formLocale = $this->localeRepository->lookup($formLocale);
-            $formData['locale'] = $formLocale;
-
             $formName = $formData['name'] ?? '';
             $formSlug = $formData['slug'] ?? '';
+
+            $formLocale = $this->loadLocale($formData['locale']);
+            $formData['locale'] = $formLocale === null ? null : [
+                'id' => $formLocale->getId()->toString(),
+                'name' => $formLocale->getName(),
+            ];
 
             if ($formName === '') {
                 $error = true;
@@ -73,13 +81,13 @@ final class Create implements RequestHandlerInterface
             } elseif ($this->hasExistingSlug($formSlug)) {
                 $error = true;
                 $errorMsg = 'The slug already exists.';
-            } elseif ($formLocale === '') {
+            } elseif ($formLocale === null) {
                 $error = true;
                 $errorMsg = 'No locale provided.';
             } else {
                 $category = new Category(
                     $user,
-                    $formLocale->getId(),
+                    $formLocale,
                     $formName,
                     $formSlug,
                 );
@@ -103,6 +111,15 @@ final class Create implements RequestHandlerInterface
                 'errorMsg' => $errorMsg,
             ],
         ));
+    }
+
+    private function loadLocale(?string $id): ?UsedLocale
+    {
+        if ($id === null || $id === '' || !Uuid::isValid($id)) {
+            return null;
+        }
+
+        return $this->entityManager->find(UsedLocale::class, $id);
     }
 
     private function loadMediaFiles(): array

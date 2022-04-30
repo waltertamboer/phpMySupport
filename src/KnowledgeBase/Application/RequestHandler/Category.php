@@ -43,14 +43,12 @@ final class Category implements RequestHandlerInterface
 
         $articles = $this->queryBus->query(new FindArticlesForCategory($category));
 
-        $response = new HtmlResponse($this->renderer->render(
+        return new HtmlResponse($this->renderer->render(
             '@site/knowledge-base/category.html.twig',
             [
                 'category' => $category,
                 'articles' => $articles,
             ]
         ));
-
-        return $response->withAddedHeader('Content-Language', $category->getLastRevision()->getLocale());
     }
 }

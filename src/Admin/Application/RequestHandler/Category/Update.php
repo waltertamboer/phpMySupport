@@ -12,17 +12,18 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Ramsey\Uuid\Uuid;
 use Support\KnowledgeBase\Domain\Category\Category;
 use Support\KnowledgeBase\Domain\Media\File;
 use Support\System\Application\Exception\ResourceNotFound;
-use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\I18n\LocaleQueryRepository;
+use Support\System\Domain\I18n\UsedLocale;
 
 final class Update implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
-        private readonly LocaleRepository $localeRepository,
     ) {
     }
 
@@ -41,10 +42,16 @@ final class Update implements RequestHandlerInterface
             throw ResourceNotFound::fromRequest($request);
         }
 
+        $locale = $entity->getLastRevision()->getLocale();
+        $locale = $locale === null ? null : [
+            'id' => $locale->getId()->toString(),
+            'name' => $locale->getName(),
+        ];
+
         $formData = [
             'name' => $entity->getLastRevision()->getName(),
             'slug' => $entity->getLastRevision()->getSlug(),
-            'locale' => $this->localeRepository->lookup($entity->getLastRevision()->getLocale()),
+            'locale' => $locale,
             'thumbnail' => $entity->getLastRevision()->getThumbnail()?->getId(),
         ];
 
@@ -54,10 +61,14 @@ final class Update implements RequestHandlerInterface
         if ($request->getMethod() === 'POST') {
             $formData = $request->getParsedBody();
 
-            $formLocale = $formData['locale'] ?? 'en';
-            $formLocale = $this->localeRepository->lookup($formLocale);
             $formName = $formData['name'] ?? '';
             $formSlug = $formData['slug'] ?? '';
+
+            $formLocale = $this->loadLocale($formData['locale']);
+            $formData['locale'] = $formLocale === null ? null : [
+                'id' => $formLocale->getId()->toString(),
+                'name' => $formLocale->getName(),
+            ];
 
             if ($formName === '') {
                 $error = true;
@@ -71,11 +82,11 @@ final class Update implements RequestHandlerInterface
             } elseif ($formSlug !== $entity->getLastRevision()->getSlug() && $this->hasExistingSlug($formSlug)) {
                 $error = true;
                 $errorMsg = 'The slug already exists.';
-            } elseif ($formLocale === '') {
+            } elseif ($formLocale === null) {
                 $error = true;
                 $errorMsg = 'No locale provided.';
             } else {
-                $revision = $entity->createRevision($user, $formLocale->getId(), $formName, $formSlug);
+                $revision = $entity->createRevision($user, $formLocale, $formName, $formSlug);
                 $revision->setThumbnail($this->loadThumbnail($formData['thumbnail']));
 
                 $this->entityManager->flush();
@@ -105,6 +116,15 @@ final class Update implements RequestHandlerInterface
         $qb->orderBy($qb->expr()->asc('r.name'));
 
         return $qb->getQuery()->getResult();
+    }
+
+    private function loadLocale(?string $id): ?UsedLocale
+    {
+        if ($id === null || $id === '' || !Uuid::isValid($id)) {
+            return null;
+        }
+
+        return $this->entityManager->find(UsedLocale::class, $id);
     }
 
     private function loadThumbnail(?string $id): ?File

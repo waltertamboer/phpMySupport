@@ -14,7 +14,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Support\KnowledgeBase\Domain\Article\Article;
 use Support\KnowledgeBase\Domain\Category\Category;
 use Support\System\Application\Exception\ResourceNotFound;
-use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\I18n\LocaleQueryRepository;
 use Support\System\Domain\Value\AnsiString;
 
 final class Overview implements RequestHandlerInterface
@@ -22,7 +22,7 @@ final class Overview implements RequestHandlerInterface
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
-        private readonly LocaleRepository $localeRepository,
+        private readonly LocaleQueryRepository $LocaleQueryRepository,
     ) {
     }
 
@@ -79,7 +79,7 @@ final class Overview implements RequestHandlerInterface
                             'id' => $category->getLastRevision()->getId(),
                             'name' => $category->getLastRevision()->getName(),
                             'slug' => $category->getLastRevision()->getSlug(),
-                            'locale' => $this->localeRepository->lookup($category->getLastRevision()->getLocale()),
+                            'locale' => $category->getLastRevision()->getLocale(),
                         ],
                     ];
                 }, $categories),

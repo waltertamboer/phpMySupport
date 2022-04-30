@@ -18,6 +18,10 @@
 
         <script>
             function slugify(str, separator = '-') {
+                if (str === null || str === undefined) {
+                    return '';
+                }
+
                 return str
                     .toString()
                     .normalize('NFD')                   // split an accented letter in the base letter and the acent
@@ -28,13 +32,57 @@
                     .replace(/\s+/g, separator);
             }
 
-            function initializeCategoryFields() {
-                var addCategoryRow = function () {
-                    var categoryContainer = document.getElementById('category-container');
+            function initializeSlugsForFormFields(nameField, slugField) {
+                initializeSlugsForFormFieldsCallback(nameField, slugField, function (value) {
+                    return value;
+                });
+            }
+
+            function initializeSlugsForFormFieldsCallback(nameField, slugField, callback) {
+                window.addEventListener('load', function () {
+                    var formFieldName = document.getElementById(nameField);
+                    var formFieldSlug = document.getElementById(slugField);
+                    var canUpdateSlug = true;
+
+                    formFieldName.addEventListener('change', function () {
+                        if (!canUpdateSlug) {
+                            return;
+                        }
+
+                        formFieldSlug.value = slugify(callback(this.value));
+                    });
+
+                    formFieldName.addEventListener('blur', function () {
+                        if (!canUpdateSlug) {
+                            return;
+                        }
+
+                        formFieldSlug.value = slugify(callback(this.value));
+                    });
+
+                    formFieldSlug.addEventListener('change', function () {
+                        canUpdateSlug = false;
+                        this.value = slugify(this.value);
+                    });
+                });
+            }
+
+            function initializeFormCollectionFields(selector) {
+                window.addEventListener('load', function () {
+                    var elements = document.querySelectorAll(selector);
+
+                    for (var i = 0; i < elements.length; ++i) {
+                        initializeFormCollectionField(elements[i]);
+                    }
+                });
+            }
+
+            function initializeFormCollectionField(container) {
+                var addRow = function () {
                     var inputGroup = this.parentElement;
 
                     var newInputGroup = inputGroup.cloneNode(true);
-                    categoryContainer.appendChild(newInputGroup);
+                    container.appendChild(newInputGroup);
 
                     var selects = newInputGroup.getElementsByTagName('select');
 
@@ -42,22 +90,21 @@
                         selects[i].value = '';
                     }
 
-                    updateCategoryInputGroupButtons();
+                    updateInputGroupButtons();
                 }
 
-                var removeCategoryRow = function () {
+                var removeRow = function () {
                     var inputGroup = this.parentElement;
 
                     inputGroup.parentElement.removeChild(inputGroup);
 
-                    updateCategoryInputGroupButtons();
+                    updateInputGroupButtons();
                 }
 
-                var updateCategoryInputGroupButtons = function () {
-                    var i, j, categoryContainer, inputGroup, inputGroups, addButtons, delButtons;
+                var updateInputGroupButtons = function () {
+                    var i, j, inputGroup, inputGroups, addButtons, delButtons;
 
-                    categoryContainer = document.getElementById('category-container');
-                    inputGroups = categoryContainer.children;
+                    inputGroups = container.children;
 
                     for (i = 0; i < inputGroups.length; ++i) {
                         inputGroup = inputGroups[i];
@@ -69,69 +116,71 @@
                             for (j = 0; j < addButtons.length; ++j) {
                                 addButtons[j].classList.add('d-block');
                                 addButtons[j].classList.remove('d-none');
-                                addButtons[j].removeEventListener('click', addCategoryRow);
-                                addButtons[j].addEventListener('click', addCategoryRow);
+                                addButtons[j].removeEventListener('click', addRow);
+                                addButtons[j].addEventListener('click', addRow);
                             }
 
                             for (j = 0; j < delButtons.length; ++j) {
                                 delButtons[j].classList.add('d-none');
                                 delButtons[j].classList.remove('d-block');
-                                addButtons[j].removeEventListener('click', removeCategoryRow);
+                                addButtons[j].removeEventListener('click', removeRow);
                             }
                         } else {
                             for (j = 0; j < addButtons.length; ++j) {
                                 addButtons[j].classList.add('d-none');
                                 addButtons[j].classList.remove('d-block');
-                                addButtons[j].removeEventListener('click', addCategoryRow);
+                                addButtons[j].removeEventListener('click', addRow);
                             }
 
                             for (j = 0; j < delButtons.length; ++j) {
                                 delButtons[j].classList.add('d-block');
                                 delButtons[j].classList.remove('d-none');
-                                delButtons[j].removeEventListener('click', removeCategoryRow);
-                                delButtons[j].addEventListener('click', removeCategoryRow);
+                                delButtons[j].removeEventListener('click', removeRow);
+                                delButtons[j].addEventListener('click', removeRow);
                             }
                         }
                     }
                 }
 
-                window.addEventListener('load', function () {
-                    updateCategoryInputGroupButtons();
-                });
-            }
-
-            function initializeSlugsForFormFields(nameField, slugField) {
-                window.addEventListener('load', function () {
-                    var formFieldName = document.getElementById(nameField);
-                    var formFieldSlug = document.getElementById(slugField);
-                    var canUpdateSlug = true;
-
-                    formFieldName.addEventListener('keyup', function () {
-                        if (!canUpdateSlug) {
-                            return;
-                        }
-
-                        formFieldSlug.value = slugify(this.value);
-                    });
-
-                    formFieldSlug.addEventListener('change', function () {
-                        canUpdateSlug = false;
-                        this.value = slugify(this.value);
-                    });
-                });
+                updateInputGroupButtons();
             }
 
             function lookupAutocomplete(config, query) {
                 if (query === '') {
-                    config.resultList.remove();
+                    if (config.resultList) {
+                        config.resultList.remove();
+                    }
                     return;
                 }
 
-                if (config.data.src instanceof Function) {
+                if (config.data && config.data.src instanceof Function) {
                     config.data.src(query).then(function (data) {
                         buildAutocompleteResultList(config, data);
                     });
                 }
+            }
+
+            function selectAutocompleteItem(config, value, label) {
+                var handleMethod = config.element.getAttribute('data-autocomplete-callback-selected');
+                var valueMethod = config.element.getAttribute('data-autocomplete-callback-value');
+                var labelMethod = config.element.getAttribute('data-autocomplete-callback-label');
+
+                if (window[handleMethod] instanceof Function) {
+                    window[handleMethod](config, value, label);
+                }
+
+                if (window[valueMethod] instanceof Function) {
+                    value = window[valueMethod](config, value, label);
+                }
+
+                if (window[labelMethod] instanceof Function) {
+                    label = window[labelMethod](config, value, label);
+                }
+
+                config.element.value = value;
+                config.stubInput.value = label;
+                config.resultList.remove();
+                config.stubInput.focus();
             }
 
             function buildAutocompleteResultList(config, items) {
@@ -168,9 +217,11 @@
                     listItemElement.setAttribute('data-label', label);
                     listItemElement.append(document.createTextNode(label));
                     listItemElement.addEventListener('click', function () {
-                        config.element.value = this.getAttribute('data-value');
-                        config.stubInput.value = this.getAttribute('data-label');
-                        config.resultList.remove();
+                        selectAutocompleteItem(
+                            config,
+                            this.getAttribute('data-value'),
+                            this.getAttribute('data-label')
+                        );
                     });
                     listElement.append(listItemElement);
                 }
@@ -198,14 +249,9 @@
                 config.stubInput.setAttribute('type', 'text');
                 config.stubInput.setAttribute('class', 'form-control');
                 config.stubInput.setAttribute('autocomplete', 'off');
-                config.stubInput.setAttribute('value', label);
+                config.stubInput.setAttribute('value', label === null ? '' : label);
                 config.stubInput.addEventListener('keyup', function () {
                     lookupAutocomplete(config, this.value);
-                });
-                config.stubInput.addEventListener('blur', function () {
-                    console.log(config);
-                });
-                config.stubInput.addEventListener('focus', function () {
                 });
                 config.element.parentNode.insertBefore(config.stubInput, config.element.nextSibling);
             }
@@ -217,20 +263,21 @@
                 for (var i = 0; i < elements.length; ++i) {
                     url = elements[i].getAttribute('data-autocomplete');
 
-                    initializeAutocomplete({
-                        selector: elements[i],
-                        data: {
-                            src: async (query) => {
-                                console.log('query: ' + query);
-                                const sourceUrl = url.replace('{query}', query);
-                                const source = await fetch(sourceUrl);
+                    (function (url) {
+                        initializeAutocomplete({
+                            selector: elements[i],
+                            data: {
+                                src: async (query) => {
+                                    const sourceUrl = url.replace('{query}', query);
+                                    const source = await fetch(sourceUrl);
 
-                                return await source.json();
-                            },
-                            valueKey: 'id',
-                            labelKey: 'name'
-                        }
-                    });
+                                    return await source.json();
+                                },
+                                valueKey: elements[i].getAttribute('data-autocomplete-field-value') || 'id',
+                                labelKey: elements[i].getAttribute('data-autocomplete-field-label') || 'name'
+                            }
+                        });
+                    })(url);
                 }
             });
         </script>
@@ -271,6 +318,11 @@
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="{{ url('admin-media-overview') }}">
                                 Media
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{{ url('admin-ticket-overview') }}">
+                                Tickets
                             </a>
                         </li>
                         {% if authenticatedUser.isOwner %}

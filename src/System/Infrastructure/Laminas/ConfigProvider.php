@@ -16,7 +16,8 @@ use Support\System\Application\Middleware\SettingsMiddleware;
 use Support\System\Domain\ApplicationConfig;
 use Support\System\Domain\Bus\Command\CommandBus;
 use Support\System\Domain\Bus\Query\QueryBus;
-use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\I18n;
+use Support\System\Domain\I18n\LocaleQueryRepository;
 use Support\System\Domain\SettingManager;
 use Support\System\Infrastructure\Doctrine\ORM\EntityManagerFactory;
 use Support\System\Infrastructure\Doctrine\ORM\MezzioAuthenticationUserRepository;
@@ -35,6 +36,7 @@ final class ConfigProvider
             'authentication' => $this->getAuthentication(),
             'dependencies' => $this->getDependencies(),
             'doctrine' => $this->getDoctrine(),
+            'query_bus' => $this->getQueryBus(),
             'templates' => $this->getTemplates(),
             'twig' => $this->getTwig(),
         ];
@@ -68,13 +70,16 @@ final class ConfigProvider
                 CommandBus::class => Factory\CommandBusFactory::class,
                 DefaultTemplateParamsMiddleware::class => Factory\DefaultTemplateParamsMiddlewareFactory::class,
                 EntityManagerInterface::class => EntityManagerFactory::class,
+                I18n\Bus\Query\GetUsedLocaleBySlugHandler::class => Factory\GetUsedLocaleBySlugHandlerFactory::class,
+                I18n\Bus\Query\GetUsedLocalesHandler::class => Factory\GetUsedLocalesHandlerFactory::class,
+                I18n\LocaleQueryRepository::class => Factory\LocaleQueryRepositoryFactory::class,
+                I18n\UsedLocaleRepository::class => Factory\UsedLocaleRepositoryFactory::class,
                 LocalizationMiddleware::class => Factory\LocalizationMiddlewareFactory::class,
                 MezzioAuthenticationUserRepository::class => MezzioAuthenticationUserRepositoryFactory::class,
                 PageNotFound::class => Factory\PageNotFoundFactory::class,
                 QueryBus::class => Factory\QueryBusFactory::class,
                 SettingManager::class => Factory\SettingManagerFactory::class,
                 SettingsMiddleware::class => Factory\SettingsMiddlewareFactory::class,
-                LocaleRepository::class => Factory\LocaleRepositoryFactory::class,
             ],
         ];
     }
@@ -93,6 +98,14 @@ final class ConfigProvider
                     __DIR__ . '/../Doctrine/ORM/',
                 ],
             ],
+        ];
+    }
+
+    private function getQueryBus(): array
+    {
+        return [
+            I18n\Bus\Query\GetUsedLocaleBySlug::class => I18n\Bus\Query\GetUsedLocaleBySlugHandler::class,
+            I18n\Bus\Query\GetUsedLocales::class => I18n\Bus\Query\GetUsedLocalesHandler::class,
         ];
     }
 

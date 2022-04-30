@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Support\KnowledgeBase\Domain\Category;
 
+use Support\System\Domain\I18n\UsedLocale;
+
 interface CategoryRepository
 {
     public function findCategoryBySlug(
@@ -11,7 +13,7 @@ interface CategoryRepository
         CategorySlug $slug,
     ): ?Category;
 
-    public function queryCategoryOverview(string $locale): CategoryOverviewCollection;
+    public function queryCategoryOverview(UsedLocale $locale): CategoryOverviewCollection;
     public function save(Category $category): void;
 
 }

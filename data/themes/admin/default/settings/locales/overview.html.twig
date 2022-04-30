@@ -1,0 +1,100 @@
+{% extends '@admin/layout/admin.html.twig' %}
+
+{% block title %}Locales{% endblock %}
+
+{% block content %}
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+                <h1>Settings</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% include '@admin/settings/submenu.html.twig' %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h2>Locales</h2>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <a href="{{ url('admin-settings-locales-add') }}">Add locale</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% if locales | length == 0 %}
+                    <p>No locales added yet.</p>
+                {% else %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Slug</th>
+                                <th>Selector text</th>
+                                <th class="text-center">Thumbnail</th>
+                                <th class="text-center">Enabled</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for locale in locales %}
+                                <tr>
+                                    <td>
+                                        {{ locale.name }}
+                                    </td>
+                                    <td>
+                                        {{ locale.slug }}
+                                    </td>
+                                    <td>
+                                        {{ locale.selectorText }}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if locale.thumbnail %}
+                                            <img src="{{ url('media-file', {
+                                                id: locale.thumbnail.id
+                                            }) }}" alt="{{ locale.name }}" style="max-height: 20px;">
+                                        {% else %}
+                                            <em>None</em>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if locale.enabled %}
+                                            Yes
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="{{ url('admin-media-sync-locale-flag', {
+                                            localeId: locale.id
+                                        }) }}" class="btn btn-sm btn-link">
+                                            Sync flag
+                                        </a>
+                                        <a href="{{ url('admin-settings-locales-edit', {
+                                            id: locale.id
+                                        }) }}" class="btn btn-sm btn-secondary">
+                                            Edit
+                                        </a>
+                                        <a href="{{ url('admin-settings-locales-delete', {
+                                            id: locale.id
+                                        }) }}" class="btn btn-sm btn-danger">
+                                            Remove
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

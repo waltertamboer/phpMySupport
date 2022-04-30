@@ -12,10 +12,12 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Ramsey\Uuid\Uuid;
 use Support\KnowledgeBase\Domain\Article\Article;
 use Support\KnowledgeBase\Domain\Category\Category;
 use Support\System\Application\Exception\ResourceNotFound;
-use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\I18n\LocaleQueryRepository;
+use Support\System\Domain\I18n\UsedLocale;
 use Support\System\Domain\SettingManager;
 
 final class Update implements RequestHandlerInterface
@@ -23,7 +25,6 @@ final class Update implements RequestHandlerInterface
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
-        private readonly LocaleRepository $localeRepository,
     ) {
     }
 
@@ -43,11 +44,15 @@ final class Update implements RequestHandlerInterface
         }
 
         $categories = $this->loadCategories();
+        $locale = $entity->getLastRevision()->getLocale();
 
         $formData = [
             'title' => $entity->getLastRevision()->getTitle(),
             'slug' => $entity->getLastRevision()->getSlug(),
-            'locale' => $this->localeRepository->lookup($entity->getLastRevision()->getLocale()),
+            'locale' => $locale === null ? null : [
+                'id' => $locale->getId()->toString(),
+                'name' => $locale->getName(),
+            ],
             'categories' => array_map(static function (Category $category): string {
                 return $category->getId()->toString();
             }, $entity->getLastRevision()->getCategories()),
@@ -71,9 +76,11 @@ final class Update implements RequestHandlerInterface
             $formSlug = $formData['slug'] ?? '';
             $formBody = $formData['body'] ?? '';
 
-            $formLocale = $formData['locale'] ?? 'en';
-            $formLocale = $this->localeRepository->lookup($formLocale);
-            $formData['locale'] = $formLocale;
+            $formLocale = $this->loadLocale($formData['locale']);
+            $formData['locale'] = $formLocale === null ? null : [
+                'id' => $formLocale->getId()->toString(),
+                'name' => $formLocale->getName(),
+            ];
 
             if ($formTitle === '') {
                 $error = true;
@@ -87,7 +94,7 @@ final class Update implements RequestHandlerInterface
             } elseif ($formSlug !== $entity->getLastRevision()->getSlug() && $this->hasExistingSlug($formSlug)) {
                 $error = true;
                 $errorMsg = 'The slug already exists.';
-            } elseif ($formLocale === '') {
+            } elseif ($formLocale === null) {
                 $error = true;
                 $errorMsg = 'No locale provided.';
             } elseif ($formBody === '') {
@@ -96,7 +103,7 @@ final class Update implements RequestHandlerInterface
             } else {
                 $entityRevision = $entity->createRevision(
                     $user,
-                    $formLocale->getId(),
+                    $formLocale,
                     $formTitle,
                     $formSlug,
                     $formBody
@@ -126,6 +133,15 @@ final class Update implements RequestHandlerInterface
                 'errorMsg' => $errorMsg,
             ],
         ));
+    }
+
+    private function loadLocale(?string $id): ?UsedLocale
+    {
+        if ($id === null || $id === '' || !Uuid::isValid($id)) {
+            return null;
+        }
+
+        return $this->entityManager->find(UsedLocale::class, $id);
     }
 
     /**

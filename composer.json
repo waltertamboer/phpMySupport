@@ -10,6 +10,7 @@
         "doctrine/migrations": "^3.4",
         "doctrine/orm": "^2.11",
         "gettext/languages": "^2.9",
+        "guzzlehttp/guzzle": "^7.4",
         "laminas/laminas-config-aggregator": "^1.7",
         "laminas/laminas-crypt": "^3.6",
         "laminas/laminas-diactoros": "^2.8",

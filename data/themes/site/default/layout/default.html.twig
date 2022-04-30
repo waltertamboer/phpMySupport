@@ -1,3 +1,6 @@
+{% if isSearchEnabled is not defined %}
+    {% set isSearchEnabled = searchEnabled() %}
+{% endif %}
 <!DOCTYPE html>
 {% if locale is not defined %}
 <html lang="en">
@@ -121,9 +124,14 @@
             }
 
             .category-box-logo img,
-            .locale-box-logo img {
-                height: 90px;
-                width: 90px;
+            .locale-box img {
+                max-height: 90px;
+                max-width: 90px;
+            }
+
+            .locale-box figcaption {
+                font-size: 1.5rem;
+                margin-top: 1rem;
             }
         </style>
     </head>
@@ -142,9 +150,30 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <div class="me-auto"></div>
+                    {% set loadedLocales = locales() %}
+                    {% if loadedLocales | length  > 1 %}
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            {% for item in loadedLocales %}
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="/{{ item.slug }}">
+                                        {% if item.thumbnail %}
+                                            <img src="{{ url('media-file', {
+                                                    id: item.thumbnail.id
+                                                }) }}"
+                                                 alt="{{ item.name }}"
+                                                 style="width: 20px;">
+                                        {% else %}
+                                            {{ item.name }}
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="me-auto"></div>
+                    {% endif %}
 
-                    {% if searchEnabled() %}
+                    {% if isSearchEnabled %}
                         <form class="d-flex" action="{{ url('search', {
                             locale: locale
                         }) }}" method="get">
@@ -156,6 +185,10 @@
                             <button class="btn btn-outline-success" type="submit">Search</button>
                         </form>
                     {% endif %}
+
+                    <a href="{{ url('create-ticket') }}" class="btn btn-success ms-2">
+                        Ask for help
+                    </a>
                 </div>
             </div>
         </nav>

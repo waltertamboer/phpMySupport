@@ -1,0 +1,121 @@
+{% extends '@admin/layout/admin.html.twig' %}
+
+{% block title %}Locales{% endblock %}
+
+{% block head_scripts %}
+    <script>
+        var currentLocale = null;
+
+        function handleAddLocaleSelection(config, value, label) {
+            document.getElementById('localeSlug').value = value;
+        }
+
+        function handleAddLocaleValue(config, value, label) {
+            return label;
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+                <h1>Settings</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% include '@admin/settings/submenu.html.twig' %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h2>Edit Locale</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ errorMsg }}
+                    </div>
+                {% endif %}
+
+                <form action="" method="post">
+                    <div class="mb-3">
+                        <label for="localeName" class="form-label">Name</label>
+                        <input type="text"
+                               name="name"
+                               id="localeName"
+                               class="form-control"
+                               autocomplete="off"
+                               data-autocomplete="{{ url('admin-autocomplete-locales') }}?q={query}"
+                               data-autocomplete-callback-selected="handleAddLocaleSelection"
+                               data-autocomplete-callback-value="handleAddLocaleValue"
+                               data-autocomplete-field-value="id"
+                               data-autocomplete-label="{{ formData.name }}"
+                               value="{{ formData.name }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="localeSlug" class="form-label">Slug</label>
+                        <input type="text"
+                               name="slug"
+                               id="localeSlug"
+                               class="form-control"
+                               autocomplete="off"
+                               value="{{ formData.slug }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="localeSelectorText" class="form-label">Selector text</label>
+                        <input type="text"
+                               name="selectorText"
+                               id="localeSelectorText"
+                               class="form-control"
+                               autocomplete="off"
+                               value="{{ formData.selectorText }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="localeThumbnail" class="form-label">
+                            Thumbnail
+                        </label>
+                        <input type="text"
+                               name="thumbnail"
+                               id="localeThumbnail"
+                               class="form-control"
+                               autocomplete="off"
+                               data-autocomplete="{{ url('admin-autocomplete-media') }}?q={query}"
+                                {% if formData.thumbnail %}
+                                    data-autocomplete-label="{{ formData.thumbnail.name }}"
+                                    value="{{ formData.thumbnail.id }}"
+                                {% else %}
+                                    data-autocomplete-label=""
+                                    value=""
+                                {% endif %}>
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="checkbox"
+                               name="enabled"
+                               id="localeEnabled"
+                               class="form-check"
+                               value="1"
+                               {% if formData.enabled %}checked{% endif %}>
+                        <label for="localeEnabled" class="form-check-label">Enabled</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,3 +1,4 @@
+{% set isSearchEnabled = 0 %}
 {% extends '@site/layout/default.html.twig' %}
 
 {% block title %}{{ siteTitle() }}{% endblock %}
@@ -7,25 +8,33 @@
         <div class="container-sm">
             <div class="row">
                 {% for item in locales %}
-                    <div class="col-3">
-                        <section class="locale-box mb-4">
-                            <a href="{{ url('category-overview', {
-                                'locale': item.id
-                            }) }}">
-                                <div class="locale-box-logo">
-                                    <img src="/svg/{{ item.country | lower }}.svg" alt="{{ item.name }}">
-                                </div>
+                {% if locales.count == 2 %}
+                <div class="col-6">
+                    {% elseif locales.count == 2 %}
+                    <div class="col-6">
+                        {% else %}
+                        <div class="col-4">
+                            {% endif %}
+                            <section class="locale-box mb-4">
+                                <a href="{{ url('category-overview', {
+                                    locale: item.slug
+                                }) }}">
+                                    {% if item.thumbnail %}
+                                        <figure>
+                                            <img src="{{ url('media-file', {
+                                                id: item.thumbnail.id
+                                            }) }}" alt="{{ item.name }}">
 
-                                <div class="locale-box-name mt-3">
-                                    <h2>
+                                            <figcaption>{{ item.selectorText }}</figcaption>
+                                        </figure>
+                                    {% else %}
                                         {{ item.name }}
-                                    </h2>
-                                </div>
-                            </a>
-                        </section>
+                                    {% endif %}
+                                </a>
+                            </section>
+                        </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
-            </div>
-        </div>
+                </div>
     </section>
 {% endblock %}

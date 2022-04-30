@@ -13,14 +13,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Support\KnowledgeBase\Domain\Article\Article;
 use Support\System\Application\Exception\ResourceNotFound;
-use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\I18n\LocaleQueryRepository;
 
 final class Overview implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
         private readonly EntityManagerInterface $entityManager,
-        private readonly LocaleRepository $localeRepository,
+        private readonly LocaleQueryRepository $LocaleQueryRepository,
     ) {
     }
 
@@ -77,7 +77,7 @@ final class Overview implements RequestHandlerInterface
                             'id' => $article->getLastRevision()->getId()->toString(),
                             'title' => $article->getLastRevision()->getTitle(),
                             'slug' => $article->getLastRevision()->getSlug(),
-                            'locale' => $this->localeRepository->lookup($article->getLastRevision()->getLocale()),
+                            'locale' => $article->getLastRevision()->getLocale(),
                         ],
                     ];
                 }, $articles),

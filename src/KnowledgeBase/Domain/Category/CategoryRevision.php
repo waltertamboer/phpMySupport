@@ -9,6 +9,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Support\Admin\Domain\Account\User;
 use Support\KnowledgeBase\Domain\Media\File;
+use Support\System\Domain\I18n\UsedLocale;
 
 class CategoryRevision
 {
@@ -16,7 +17,7 @@ class CategoryRevision
     private DateTimeImmutable $createdAt;
     private User $createdBy;
     private Category $category;
-    private string $locale;
+    private ?UsedLocale $locale;
     private string $name;
     private string $slug;
     private ?File $thumbnail;
@@ -24,7 +25,7 @@ class CategoryRevision
     public function __construct(
         User $createdBy,
         Category $category,
-        string $locale,
+        ?UsedLocale $locale,
         string $name,
         string $slug,
     ) {
@@ -58,7 +59,7 @@ class CategoryRevision
         return $this->category;
     }
 
-    public function getLocale(): string
+    public function getLocale(): ?UsedLocale
     {
         return $this->locale;
     }

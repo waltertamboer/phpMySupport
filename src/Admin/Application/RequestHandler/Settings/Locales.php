@@ -4,32 +4,39 @@ declare(strict_types=1);
 
 namespace Support\Admin\Application\RequestHandler\Settings;
 
-use Laminas\Diactoros\Response\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Support\System\Domain\I18n\Locale;
-use Support\System\Domain\I18n\LocaleRepository;
+use Support\System\Domain\I18n\UsedLocale;
 
 final class Locales implements RequestHandlerInterface
 {
     public function __construct(
-        private readonly LocaleRepository $localeRepository,
+        private readonly TemplateRendererInterface $renderer,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $queryParams = $request->getQueryParams();
-        $query = $queryParams['q'] ?? '';
+        return new HtmlResponse($this->renderer->render(
+            '@admin/settings/locales/overview.html.twig',
+            [
+                'locales' => $this->loadLocales(),
+            ],
+        ));
+    }
 
-        $localeList = $this->localeRepository->query($query);
+    private function loadLocales(): array
+    {
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('l');
+        $qb->from(UsedLocale::class, 'l');
+        $qb->orderBy($qb->expr()->asc('l.name'));
 
-        return new JsonResponse(array_values(array_map(static function (Locale $locale): array {
-            return [
-                'id' => $locale->getId(),
-                'name' => $locale->getName(),
-            ];
-        }, $localeList->toArray())));
+        return $qb->getQuery()->getResult();
     }
 }

@@ -14,6 +14,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Support\Admin\Domain\Media\MediaUploadProcessor;
 use Support\KnowledgeBase\Domain\Article\Article;
 use Support\KnowledgeBase\Domain\Category\Category;
 use Support\KnowledgeBase\Domain\Category\CategoryName;
@@ -44,17 +45,8 @@ final class Create implements RequestHandlerInterface
             assert($uploadedFile === null || $uploadedFile instanceof UploadedFile);
 
             if ($uploadedFile !== null) {
-                $file = new File(
-                    $user,
-                    $uploadedFile->getClientFilename(),
-                    $uploadedFile->getClientMediaType(),
-                    $uploadedFile->getSize()
-                );
-
-                $uploadedFile->moveTo($file->getLastRevision()->getTargetPath());
-
-                $this->entityManager->persist($file);
-                $this->entityManager->flush();
+                $processor = new MediaUploadProcessor($this->entityManager);
+                $file = $processor($user, $uploadedFile);
 
                 $tinymce = $request->getQueryParams()['tinymce'] ?? '';
 

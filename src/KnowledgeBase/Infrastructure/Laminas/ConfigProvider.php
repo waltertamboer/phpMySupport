@@ -49,6 +49,7 @@ final class ConfigProvider
                 RequestHandler\Article::class => Factory\ArticleRequestHandlerFactory::class,
                 RequestHandler\Category::class => Factory\CategoryRequestHandlerFactory::class,
                 RequestHandler\CategoryOverview::class => Factory\CategoryOverviewRequestHandlerFactory::class,
+                RequestHandler\CreateTicket::class => Factory\CreateTicketRequestHandlerFactory::class,
                 RequestHandler\MediaFile::class => Factory\MediaFileRequestHandlerFactory::class,
                 RequestHandler\Search::class => Factory\SearchRequestHandlerFactory::class,
             ],
@@ -80,6 +81,15 @@ final class ConfigProvider
     private function getRoutes(): array
     {
         return [
+            'create-ticket' => [
+                'name' => 'create-ticket',
+                'path' => '/tickets/create',
+                'middleware' => [
+                    \Support\System\Application\Middleware\SettingsMiddleware::class,
+                    RequestHandler\CreateTicket::class,
+                ],
+                'allowed_methods' => [ 'GET' ],
+            ],
             'locale-selector' => [
                 'name' => 'locale-selector',
                 'path' => '/',
