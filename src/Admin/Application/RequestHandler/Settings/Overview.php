@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Support\Admin\Application\RequestHandler\Settings;
 
+use DirectoryIterator;
 use Doctrine\ORM\EntityManagerInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
@@ -91,10 +92,52 @@ final class Overview implements RequestHandlerInterface
         return new HtmlResponse($this->renderer->render(
             '@admin/settings/overview.html.twig',
             [
+                'adminThemes' => $this->getAdminThemes(),
+                'siteThemes' => $this->getSiteThemes(),
                 'formData' => $formData,
                 'error' => $error,
                 'errorMsg' => $errorMsg,
             ],
         ));
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getAdminThemes(): array
+    {
+        $result = [];
+
+        $iterator = new DirectoryIterator('data/themes/admin/');
+
+        foreach ($iterator as $item) {
+            if (!$item->isDir() || $item->isDot()) {
+                continue;
+            }
+
+            $result[] = $item->getFilename();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getSiteThemes(): array
+    {
+        $result = [];
+
+        $iterator = new DirectoryIterator('data/themes/site/');
+
+        foreach ($iterator as $item) {
+            if (!$item->isDir() || $item->isDot()) {
+                continue;
+            }
+
+            $result[] = $item->getFilename();
+        }
+
+        return $result;
     }
 }

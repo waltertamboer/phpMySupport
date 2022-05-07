@@ -54,12 +54,20 @@
 
                     <div class="mb-3">
                         <label for="theme" class="form-label">Theme</label>
-                        <input type="text" name="theme" id="theme" class="form-control" value="{{ formData.theme }}">
+                        <select name="theme" id="theme" class="form-control">
+                            {% for theme in siteThemes %}
+                                <option value="{{ theme }}"{% if formData.theme == theme %} selected{% endif %}>{{ theme }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="themeAdmin" class="form-label">Admin theme</label>
-                        <input type="text" name="themeAdmin" id="themeAdmin" class="form-control" value="{{ formData.themeAdmin }}">
+                        <select name="themeAdmin" id="themeAdmin" class="form-control">
+                            {% for theme in adminThemes %}
+                                <option value="{{ theme }}"{% if formData.themeAdmin == theme %} selected{% endif %}>{{ theme }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                     <h2 class="mt-4">Localization</h2>
