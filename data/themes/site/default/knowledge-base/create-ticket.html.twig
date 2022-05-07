@@ -6,29 +6,56 @@
     <div class="container">
         <h1>Ask for help</h1>
 
-        <div class="mb-3">
-            <label for="questionSubject" class="form-label">Subject</label>
-            <input type="text" class="form-control" name="subject" id="questionSubject">
-        </div>
+        {% if success %}
+            <div class="alert alert-success">
+                Ticket successfully created.
+            </div>
+        {% else %}
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endif %}
 
-        <div class="mb-3">
-            <label for="questionCategory" class="form-label">Category</label>
-            <select id="questionCategory" name="category" class="form-control">
-                <option value="">Not sure</option>
-                <option value="question">Question</option>
-                <option value="bug">Bug report</option>
-            </select>
-        </div>
+            <form action="" method="post">
+                <div class="mb-3">
+                    <label for="questionSubject" class="form-label">Subject</label>
+                    <input type="text"
+                           class="form-control"
+                           name="subject"
+                           id="questionSubject"
+                           value="{{ formData.subject }}">
+                </div>
 
-        <div class="mb-2">
-            <label for="" class="form-label">Message</label>
-            <textarea class="form-control" name="message" style="height: 300px;"></textarea>
-        </div>
+                {% if categories | length == 0 %}
+                    <input type="hidden" name="category" value="">
+                {% else %}
+                    <div class="mb-3">
+                        <label for="questionCategory" class="form-label">Category</label>
+                        <select id="questionCategory" name="category" class="form-control">
+                            <option value="">Not sure</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}"{% if category.id == formData.category %} selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
 
-        <div class="mb-2">
-            <button type="submit" class="btn btn-outline-success">
-                Send
-            </button>
-        </div>
+                <div class="mb-2">
+                    <label for="" class="form-label">Message</label>
+                    <textarea class="form-control"
+                              name="message"
+                              style="height: 300px;">{{ formData.message }}</textarea>
+                </div>
+
+                <div class="mb-2">
+                    <button type="submit" class="btn btn-outline-success">
+                        Send
+                    </button>
+                </div>
+            </form>
+        {% endif %}
     </div>
 {% endblock %}

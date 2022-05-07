@@ -13,6 +13,7 @@ use Support\KnowledgeBase\Domain\Article\Article as DomainArticle;
 use Support\KnowledgeBase\Domain\Article\Bus\Command\RegisterArticleView;
 use Support\KnowledgeBase\Domain\Article\Bus\Query\FindArticleBySlug;
 use Support\System\Application\Exception\ResourceNotFound;
+use Support\System\Application\Middleware\LocalizationMiddleware;
 use Support\System\Domain\Bus\Command\CommandBus;
 use Support\System\Domain\Bus\Query\QueryBus;
 use Support\System\Domain\I18n\Bus\Query\GetUsedLocaleBySlug;
@@ -29,11 +30,10 @@ final class Article implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $routeLocale = $request->getAttribute('locale');
         $routeSlug = $request->getAttribute('slug');
 
-        $locale = $this->queryBus->query(new GetUsedLocaleBySlug($routeLocale));
-        assert($locale === null || $locale instanceof UsedLocale);
+        $usedLocale = $request->getAttribute(LocalizationMiddleware::USED_LOCALIZATION_ATTRIBUTE);
+        assert($usedLocale === null || $usedLocale instanceof UsedLocale);
 
         $article = $this->queryBus->query(new FindArticleBySlug($routeSlug));
         assert($article === null || $article instanceof DomainArticle);
@@ -47,7 +47,8 @@ final class Article implements RequestHandlerInterface
         return new HtmlResponse($this->renderer->render(
             '@site/knowledge-base/article.html.twig',
             [
-                'locale' => $locale,
+                'locale' => $usedLocale->getSlug(),
+                'usedLocale' => $usedLocale,
                 'article' => $article,
             ]
         ));

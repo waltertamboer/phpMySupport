@@ -20,36 +20,40 @@ final class ApplicationRuntime extends AbstractExtension implements GlobalsInter
     ) {
     }
 
-    public function getFunctions()
+    public function getFunctions() // phpcs:ignore
     {
-        $config = $this->settingManager;
-
         return [
-            new TwigFunction('siteTitle', static function () use ($config): string {
-                return $config->get('title');
+            new TwigFunction('siteTitle', function (): string {
+                return $this->settingManager->get('title');
             }),
-            new TwigFunction('siteBasePath', static function () use ($config): string {
-                return $config->get('basePath');
+            new TwigFunction('siteBasePath', function (): string {
+                return $this->settingManager->get('basePath');
             }),
-            new TwigFunction('siteHomepage', static function () use ($config): string {
-                return $config->get('homepage');
+            new TwigFunction('siteHomepage', function (): string {
+                return $this->settingManager->get('homepage');
             }),
-            new TwigFunction('searchEnabled', static function () use ($config): bool {
-                return $config->get('searchEnabled') === '1';
+            new TwigFunction('searchEnabled', function (): bool {
+                return $this->settingManager->get('searchEnabled') === '1';
             }),
-            new TwigFunction('googleTranslateEnabled', static function () use ($config): bool {
-                return $config->get('googleTranslateEnabled') === '1';
+            new TwigFunction('ticketsEnabled', function (): bool {
+                return $this->settingManager->get('ticketsEnabled') === '1';
             }),
-            new TwigFunction('localizationEnabled', static function () use ($config): bool {
-                return $config->get('localizationEnabled') === '1';
+            new TwigFunction('googleTranslateEnabled', function (): bool {
+                return $this->settingManager->get('googleTranslateEnabled') === '1';
             }),
-            new TwigFunction('tinyMceApiKey', static function () use ($config): string {
-                return $config->get('tinyMceApiKey');
+            new TwigFunction('localizationEnabled', function (): bool {
+                return $this->settingManager->get('localizationEnabled') === '1';
             }),
-            new TwigFunction('tinyMceConfig', static function () use ($config): array {
-                return json_decode($config->get('tinyMceConfig'), true);
+            new TwigFunction('tinyMceApiKey', function (): string {
+                return $this->settingManager->get('tinyMceApiKey');
             }),
-            new TwigFunction('sortQuery', static function (string $field, string $currentValue): string {
+            new TwigFunction('tinyMceConfig', function (): array {
+                return json_decode(
+                    $this->settingManager->get('tinyMceConfig'), 
+                    true
+                );
+            }),
+            new TwigFunction('sortQuery', function (string $field, string $currentValue): string {
                 $ascending = str_starts_with($currentValue, '+');
                 $currentField = substr($currentValue, 1);
 
@@ -67,10 +71,10 @@ final class ApplicationRuntime extends AbstractExtension implements GlobalsInter
         ];
     }
 
-    public function getFilters()
+    public function getFilters() // phpcs:ignore
     {
         return [
-            new TwigFilter('formatBytes', static function (int $bytes, bool $si = true): string {
+            new TwigFilter('formatBytes', function (int $bytes, bool $si = true): string {
                 $unit = $si ? 1000 : 1024;
 
                 if ($bytes <= $unit) {

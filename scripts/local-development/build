@@ -12,3 +12,5 @@ mv themify-icons/themify-icons.css public/fonts/themify/themify-icons.css
 mv themify-icons/fonts/* public/fonts/themify/
 rm themify.zip
 rm -rf themify-icons
+
+sed -i 's#fonts/themify#themify#g' public/fonts/themify/themify-icons.css

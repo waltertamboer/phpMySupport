@@ -8,16 +8,25 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Symfony\Component\Translation\Translator;
+use Support\System\Domain\I18n\Translator;
 
 final class TranslatorMiddleware implements MiddlewareInterface
 {
     public const NAME = 'translator';
 
+    public function __construct(
+        private readonly Translator $translator
+    ) {
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
-        $translator = new Translator('en');
+        $usedLocale = $request->getAttribute(LocalizationMiddleware::USED_LOCALIZATION_ATTRIBUTE);
 
-        return $handler->handle($request->withAttribute(self::NAME, $translator));
+        if ($usedLocale !== null) {
+            $this->translator->setLocale($usedLocale->getSlug());
+        }
+
+        return $handler->handle($request->withAttribute(self::NAME, $this->translator));
     }
 }

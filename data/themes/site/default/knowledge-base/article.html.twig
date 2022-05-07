@@ -15,13 +15,15 @@
 
             <div class="article-meta-footer">
                 <time datetime="{{ article.lastRevision.createdAt | date }}">
-                    Last updated on {{ article.lastRevision.createdAt | date('r') }}
+                    {{ 'page.view-article.last-updated' | trans({
+                        '%lastUpdated%': article.lastRevision.createdAt | date('r')
+                    }) }}
                 </time>
                 <span class="d-print-none ms-2">
                     <a href="#" onclick="window.print()">
                         <span class="ti-printer ms-2 me-1"></span>
 
-                        Print
+                        {{ 'page.view-article.print-button' | trans }}
                     </a>
                 </span>
             </div>

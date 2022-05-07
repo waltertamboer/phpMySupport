@@ -13,6 +13,7 @@ use Mezzio\Container\ApplicationConfigInjectionDelegator;
 use Support\System\Application\Middleware\LocalizationMiddleware;
 use Support\System\Application\Middleware\PageNotFound;
 use Support\System\Application\Middleware\SettingsMiddleware;
+use Support\System\Application\Middleware\TranslatorMiddleware;
 use Support\System\Domain\ApplicationConfig;
 use Support\System\Domain\Bus\Command\CommandBus;
 use Support\System\Domain\Bus\Query\QueryBus;
@@ -25,6 +26,8 @@ use Support\System\Infrastructure\Doctrine\ORM\MezzioAuthenticationUserRepositor
 use Support\System\Infrastructure\Factory;
 use Support\System\Infrastructure\Twig\ApplicationRuntime;
 use Support\System\Infrastructure\Twig\DefaultTemplateParamsMiddleware;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Extra\Intl\IntlExtension;
 
@@ -73,6 +76,8 @@ final class ConfigProvider
                 I18n\Bus\Query\GetUsedLocaleBySlugHandler::class => Factory\GetUsedLocaleBySlugHandlerFactory::class,
                 I18n\Bus\Query\GetUsedLocalesHandler::class => Factory\GetUsedLocalesHandlerFactory::class,
                 I18n\LocaleQueryRepository::class => Factory\LocaleQueryRepositoryFactory::class,
+                I18n\Translator::class => Factory\TranslatorFactory::class,
+                TranslatorInterface::class => Factory\SymfonyTranslatorFactory::class,
                 I18n\UsedLocaleRepository::class => Factory\UsedLocaleRepositoryFactory::class,
                 LocalizationMiddleware::class => Factory\LocalizationMiddlewareFactory::class,
                 MezzioAuthenticationUserRepository::class => MezzioAuthenticationUserRepositoryFactory::class,
@@ -80,6 +85,8 @@ final class ConfigProvider
                 QueryBus::class => Factory\QueryBusFactory::class,
                 SettingManager::class => Factory\SettingManagerFactory::class,
                 SettingsMiddleware::class => Factory\SettingsMiddlewareFactory::class,
+                TranslationExtension::class => Factory\TranslationExtensionFactory::class,
+                TranslatorMiddleware::class => Factory\TranslatorMiddlewareFactory::class,
             ],
         ];
     }
@@ -126,6 +133,7 @@ final class ConfigProvider
             'assets_version' => 'v1',
             'extensions' => [
                 ApplicationRuntime::class,
+                TranslationExtension::class,
                 new IntlExtension(),
             ],
             'globals' => [],

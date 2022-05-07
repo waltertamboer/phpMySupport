@@ -1,5 +1,16 @@
 {
+    "topbar.navigation.toggle": "Schakel tussen navigation",
     "topbar.search.placeholder": "Doorzoek de bibliotheek...",
     "topbar.search.button": "Zoeken",
-    "hello": "abc"
+
+    "page.category-selector.search.placeholder": "Doorzoek de bibliotheek...",
+    "page.category-selector.search.button": "Zoeken",
+    "page.category-selector.none-found": "Er is nog geen inhoud toegevoegd.",
+    "page.category-selector.category-articles": "{0}0 artikelen|{1}1 artikel|]1,Inf[%count% artikelen",
+
+    "page.view-article.last-updated": "Bijgewerkt op %lastUpdated%",
+    "page.view-article.print-button": "Printen",
+
+    "page.search-results.title": "Gevonden Zoekresultaten",
+    "page.search-results.no-results": "Er zijn geen artikelen gevonden die voldoen aan de opgegeven zoekwoorden."
 }

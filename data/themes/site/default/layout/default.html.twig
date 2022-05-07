@@ -1,6 +1,9 @@
 {% if isSearchEnabled is not defined %}
     {% set isSearchEnabled = searchEnabled() %}
 {% endif %}
+{% if isTicketsEnabled is not defined %}
+    {% set isTicketsEnabled = ticketsEnabled() %}
+{% endif %}
 <!DOCTYPE html>
 {% if locale is not defined %}
 <html lang="en">
@@ -8,11 +11,9 @@
 <html lang="{{ locale }}">
 {% endif %}
     <head>
-        <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- Bootstrap CSS -->
         <link href="{{ asset('css/bootstrap.min.css') }}"
               rel="stylesheet"
               integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
@@ -145,7 +146,7 @@
                         data-bs-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent"
                         aria-expanded="false"
-                        aria-label="Toggle navigation">
+                        aria-label="{{ 'topbar.navigation.toggle' | trans }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -180,15 +181,19 @@
                             <input class="form-control me-2"
                                    name="q"
                                    type="search"
-                                   placeholder="Search"
-                                   aria-label="Search">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
+                                   placeholder="{{ 'topbar.search.placeholder' | trans }}"
+                                   aria-label="{{ 'topbar.search.button' | trans }}">
+                            <button class="btn btn-outline-success" type="submit">
+                                {{ 'topbar.search.button' | trans }}
+                            </button>
                         </form>
                     {% endif %}
 
-                    <a href="{{ url('create-ticket') }}" class="btn btn-success ms-2">
-                        Ask for help
-                    </a>
+                    {% if isTicketsEnabled %}
+                        <a href="{{ url('create-ticket') }}" class="btn btn-success ms-2">
+                            {{ 'topbar.ask-for-help' | trans }}
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </nav>

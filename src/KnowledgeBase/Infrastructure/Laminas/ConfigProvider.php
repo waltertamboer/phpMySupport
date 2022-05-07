@@ -88,7 +88,7 @@ final class ConfigProvider
                     \Support\System\Application\Middleware\SettingsMiddleware::class,
                     RequestHandler\CreateTicket::class,
                 ],
-                'allowed_methods' => [ 'GET' ],
+                'allowed_methods' => [ 'GET', 'POST' ],
             ],
             'locale-selector' => [
                 'name' => 'locale-selector',

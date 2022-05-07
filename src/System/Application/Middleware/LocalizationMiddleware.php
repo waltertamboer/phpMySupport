@@ -9,17 +9,18 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Support\System\Domain\I18n\UsedLocaleRepository;
 use Support\System\Domain\SettingManager;
 
 final class LocalizationMiddleware implements MiddlewareInterface
 {
     public const LOCALIZATION_ATTRIBUTE = 'locale';
+    public const USED_LOCALIZATION_ATTRIBUTE = 'usedLocale';
 
-    private SettingManager $settingManager;
-
-    public function __construct(SettingManager $settingManager)
-    {
-        $this->settingManager = $settingManager;
+    public function __construct(
+        private readonly SettingManager $settingManager,
+        private readonly UsedLocaleRepository $usedLocaleRepository,
+    ) {
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
@@ -33,6 +34,12 @@ final class LocalizationMiddleware implements MiddlewareInterface
             )
         );
 
-        return $handler->handle($request->withAttribute(self::LOCALIZATION_ATTRIBUTE, $locale));
+        $usedLocale = $this->usedLocaleRepository->findBySlug($locale);
+
+        return $handler->handle(
+            $request
+                ->withAttribute(self::LOCALIZATION_ATTRIBUTE, $locale)
+                ->withAttribute(self::USED_LOCALIZATION_ATTRIBUTE, $usedLocale)
+        );
     }
 }

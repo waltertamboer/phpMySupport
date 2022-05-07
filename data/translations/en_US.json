@@ -1,4 +1,16 @@
 {
+    "topbar.navigation.toggle": "Toggle navigation",
     "topbar.search.placeholder": "Search the knowledge base...",
-    "topbar.search.button": "Search"
+    "topbar.search.button": "Search",
+
+    "page.category-selector.search.placeholder": "Search the knowledge base...",
+    "page.category-selector.search.button": "Search",
+    "page.category-selector.none-found": "No content found yet.",
+    "page.category-selector.category-articles": "{0}0 articles|{1}1 article|]1,Inf[%count% articles",
+
+    "page.view-article.last-updated": "Last updated on %lastUpdated%",
+    "page.view-article.print-button": "Print",
+
+    "page.search-results.title": "Search results",
+    "page.search-results.no-results": "No articles found matching your search query."
 }

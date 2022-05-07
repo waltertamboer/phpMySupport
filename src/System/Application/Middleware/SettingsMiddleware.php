@@ -27,6 +27,11 @@ final class SettingsMiddleware implements MiddlewareInterface
         );
 
         $request = $request->withAttribute(
+            'ticketsEnabled',
+            $this->settingManager->get('ticketsEnabled') === '1'
+        );
+
+        $request = $request->withAttribute(
             'localizationEnabled',
             $this->settingManager->get('localizationEnabled') === '1'
         );

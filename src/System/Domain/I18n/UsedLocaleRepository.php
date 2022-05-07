@@ -8,4 +8,5 @@ interface UsedLocaleRepository
 {
     public function getUsedLocales(): UsedLocaleList;
     public function find(string $id): ?UsedLocale;
+    public function findBySlug(string $slug): ?UsedLocale;
 }

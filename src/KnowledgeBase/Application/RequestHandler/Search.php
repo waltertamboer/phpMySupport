@@ -10,6 +10,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Support\System\Application\Middleware\LocalizationMiddleware;
 
 final class Search implements RequestHandlerInterface
 {
@@ -21,7 +22,7 @@ final class Search implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $routeLocale = $request->getAttribute('locale');
+        $usedLocale = $request->getAttribute(LocalizationMiddleware::USED_LOCALIZATION_ATTRIBUTE);
 
         $page = (int)($request->getQueryParams()['page'] ?? 1);
         $pageSize = 25;
@@ -38,7 +39,7 @@ final class Search implements RequestHandlerInterface
             $qb->select('a');
             $qb->from(\Support\KnowledgeBase\Domain\Article\Article::class, 'a');
             $qb->join('a.lastRevision', 'r');
-            $qb->where($qb->expr()->like('r.locale', ':locale'));
+            $qb->where($qb->expr()->eq('IDENTITY(r.locale)', ':locale'));
             $qb->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->like('LOWER(r.title)', ':query'),
@@ -46,7 +47,7 @@ final class Search implements RequestHandlerInterface
                 )
             );
             $qb->setParameter('query', strtolower($query));
-            $qb->setParameter('locale', $routeLocale);
+            $qb->setParameter('locale', $usedLocale->getId()->toString());
             $qb->setMaxResults($pageSize);
             $qb->setFirstResult($page * $pageSize - $pageSize);
 
@@ -56,12 +57,13 @@ final class Search implements RequestHandlerInterface
         $response = new HtmlResponse($this->renderer->render(
             '@site/knowledge-base/search.html.twig',
             [
-                'locale' => $routeLocale,
+                'locale' => $usedLocale->getSlug(),
+                'usedLocale' => $usedLocale,
                 'articles' => $articles,
                 'noQueryError' => $noQueryError,
             ],
         ));
 
-        return $response->withAddedHeader('Content-Language', $routeLocale);
+        return $response;
     }
 }

@@ -45,4 +45,15 @@ final class UsedLocaleRepository implements BaseUsedLocaleRepository
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+
+    public function findBySlug(string $slug): ?UsedLocale
+    {
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('e');
+        $qb->from(UsedLocale::class, 'e');
+        $qb->where($qb->expr()->eq('e.slug', ':slug'));
+        $qb->setParameter('slug', $slug);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 }

@@ -8,23 +8,23 @@
             <div class="col">
                 {% if noQueryError or articles | length == 0 %}
                     <main>
-                        <h1>Search Results</h1>
+                        <h1>{{ 'page.search-results.title' | trans }}</h1>
 
                         <p>
-                            No articles found matching your search query.
+                            {{ 'page.search-results.no-results' | trans }}
                         </p>
                     </main>
                 {% endif %}
 
                 {% if articles | length != 0 %}
                     <main>
-                        <h1>Search Results</h1>
-                        {% for article in articles %}
+                        <h1>{{ 'page.search-results.title' | trans }}</h1>
 
+                        {% for article in articles %}
                             <section class="search-result-item">
                                 <h2>
                                     <a href="{{ url('article', {
-                                        locale: article.lastRevision.locale,
+                                        locale: article.lastRevision.locale.slug,
                                         slug: article.lastRevision.slug
                                     }) }}">
                                         {{ article.lastRevision.title }}

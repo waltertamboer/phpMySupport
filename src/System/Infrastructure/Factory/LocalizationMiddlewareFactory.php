@@ -6,14 +6,16 @@ namespace Support\System\Infrastructure\Factory;
 
 use Psr\Container\ContainerInterface;
 use Support\System\Application\Middleware\LocalizationMiddleware;
+use Support\System\Domain\I18n\UsedLocaleRepository;
 use Support\System\Domain\SettingManager;
 
 final class LocalizationMiddlewareFactory
 {
     public function __invoke(ContainerInterface $container): LocalizationMiddleware
     {
-        $settingManager = $container->get(SettingManager::class);
-
-        return new LocalizationMiddleware($settingManager);
+        return new LocalizationMiddleware(
+            $container->get(SettingManager::class),
+            $container->get(UsedLocaleRepository::class),
+        );
     }
 }
