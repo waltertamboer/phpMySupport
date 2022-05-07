@@ -2,7 +2,11 @@
 
 {% set locale = category.lastRevision.locale.slug %}
 
-{% block title %}Articles related to {{ category.lastRevision.name }} - {{ siteTitle() }}{% endblock %}
+{% block title %}
+    {{ 'page.category.page-title' | trans({
+        '%categoryName%': category.lastRevision.name
+    }) }} - {{ siteTitle() }}
+{% endblock %}
 
 {% block content %}
     <div class="container-sm mt-3">
@@ -13,7 +17,7 @@
                         <h1>{{ category.lastRevision.name }}</h1>
 
                         <p>
-                            No articles available.
+                            {{ 'page.category.no-articles' | trans }}
                         </p>
                     </main>
                 </div>

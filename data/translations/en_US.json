@@ -8,6 +8,9 @@
     "page.category-selector.none-found": "No content found yet.",
     "page.category-selector.category-articles": "{0}0 articles|{1}1 article|]1,Inf[%count% articles",
 
+    "page.category.no-articles": "No articles available.",
+    "page.category.page-title": "Articles related to %categoryName%",
+
     "page.view-article.last-updated": "Last updated on %lastUpdated%",
     "page.view-article.print-button": "Print",
 
